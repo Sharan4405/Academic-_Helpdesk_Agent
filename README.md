@@ -263,6 +263,19 @@ python -m academic_helpdesk.cli --model ollama_chat/llama3.1:8b
 python -m academic_helpdesk.cli --model groq/openai/gpt-oss-20b
 ```
 
+**Web demo.** A React UI with a chat panel (the full agent system: answer, cited
+sources, agent route and tool calls) beside an Evidence panel (RAG layer only, no
+LLM: every retrieved chunk with its distance, re-rank score and the refusal
+verdict). After ingesting once:
+
+```bash
+python -m academic_helpdesk.web.server        # http://127.0.0.1:8000
+```
+
+The built UI is committed in `academic_helpdesk/web/static/`, so no Node is needed
+to run it. To change the UI: `cd frontend && npm install && npm run dev`
+(proxies `/api` to the Python server), then `npm run build`.
+
 The ADK developer UI also works, since `academic_helpdesk/agent.py` exposes
 `root_agent`:
 

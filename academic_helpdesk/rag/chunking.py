@@ -59,7 +59,26 @@ def _pack(section_text: str) -> list[str]:
     if len(section_text) <= config.CHUNK_TARGET_CHARS:
         return [section_text]
 
-    paragraphs = [p for p in re.split(r"\n\s*\n", section_text) if p.strip()]
+    paragraphs = []
+    for para in (p for p in re.split(r"\n\s*\n", section_text) if p.strip()):
+        # Extracted PDFs and sheets can be one enormous "paragraph"; break those on lines.
+        if len(para) <= config.CHUNK_TARGET_CHARS:
+            paragraphs.append(para)
+            continue
+        block = ""
+        for line in para.split("\n"):
+            while len(line) > config.CHUNK_TARGET_CHARS:  # a single unbroken line
+                cut = line.rfind(" ", 0, config.CHUNK_TARGET_CHARS)
+                if cut <= 0:
+                    cut = config.CHUNK_TARGET_CHARS
+                paragraphs.append(line[:cut])
+                line = line[cut:].lstrip()
+            if block and len(block) + len(line) + 1 > config.CHUNK_TARGET_CHARS:
+                paragraphs.append(block)
+                block = ""
+            block = f"{block}\n{line}" if block else line
+        if block:
+            paragraphs.append(block)
     pieces: list[str] = []
     current = ""
     for para in paragraphs:
@@ -110,8 +129,9 @@ def chunk_document(path: Path) -> list[Chunk]:
 
 
 def chunk_corpus(documents_dir: Path | None = None) -> list[Chunk]:
-    documents_dir = documents_dir or config.DOCUMENTS_DIR
+    directories = [documents_dir] if documents_dir else config.CORPUS_DIRS
     chunks: list[Chunk] = []
-    for path in sorted(documents_dir.glob("*.md")):
-        chunks.extend(chunk_document(path))
+    for directory in directories:
+        for path in sorted(directory.glob("*.md")):
+            chunks.extend(chunk_document(path))
     return chunks

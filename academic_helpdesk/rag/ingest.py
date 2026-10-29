@@ -20,9 +20,12 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="chunk only, no embedding")
     args = parser.parse_args()
 
-    documents = sorted(config.DOCUMENTS_DIR.glob("*.md"))
+    documents = [p for d in config.CORPUS_DIRS for p in sorted(d.glob("*.md"))]
     if not documents:
-        print(f"No markdown documents found in {config.DOCUMENTS_DIR}", file=sys.stderr)
+        hint = (
+            "\nRun: python -m academic_helpdesk.rag.extract" if config.CORPUS_SOURCE != "synthetic" else ""
+        )
+        print(f"No markdown documents found in {config.CORPUS_DIRS}.{hint}", file=sys.stderr)
         return 1
 
     chunks = chunk_corpus()

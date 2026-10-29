@@ -19,6 +19,20 @@ except ImportError:
 DATA_DIR = PROJECT_ROOT / "data"
 DOCUMENTS_DIR = DATA_DIR / "documents"
 STRUCTURED_DIR = DATA_DIR / "structured"
+RAW_DIR = DATA_DIR / "raw"
+PROCESSED_DIR = DATA_DIR / "processed"
+
+# Which corpus the RAG index is built from:
+#   "synthetic" -- the hand-written documents in data/documents (what eval/ scores)
+#   "raw"       -- the real institute files in data/raw, run through
+#                  `python -m academic_helpdesk.rag.extract` into data/processed
+#   "all"       -- both
+CORPUS_SOURCE = os.environ.get("CORPUS_SOURCE", "synthetic").strip().lower()
+CORPUS_DIRS = {
+    "synthetic": [DOCUMENTS_DIR],
+    "raw": [PROCESSED_DIR],
+    "all": [DOCUMENTS_DIR, PROCESSED_DIR],
+}.get(CORPUS_SOURCE, [DOCUMENTS_DIR])
 LOGS_DIR = PROJECT_ROOT / "logs"
 VECTOR_STORE_DIR = PROJECT_ROOT / ".chroma"
 
@@ -37,6 +51,8 @@ EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "nomic-embed-text")
 # collection. Keying the name on the backend makes switching safe: you re-ingest
 # into a separate collection instead of corrupting the existing one.
 COLLECTION_NAME = f"academic_documents_{EMBEDDING_BACKEND}"
+if CORPUS_SOURCE != "synthetic":
+    COLLECTION_NAME += f"_{CORPUS_SOURCE}"  # likewise, one collection per corpus
 
 # LiteLLM model string -- this is the only thing that changes to swap providers.
 #   ollama_chat/qwen3:8b             local, free, 8B (what the brief names)
