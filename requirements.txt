@@ -1,0 +1,16 @@
+# Agent framework and the LiteLLM connector that reaches Ollama / hosted providers
+google-adk>=1.0.0
+litellm>=1.63.0
+
+# litellm's non-Ollama providers (e.g. Groq) import this internally at call time
+mcp>=1.0.0
+
+# Local vector store. Also supplies the bundled all-MiniLM-L6-v2 ONNX embedder
+# used when EMBEDDING_BACKEND=local, which needs no server.
+chromadb>=0.5.5
+
+# Only needed when using Ollama for the chat model or for embeddings
+ollama>=0.4.0
+
+# Corpus front-matter parsing
+PyYAML>=6.0

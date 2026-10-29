@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.chroma/
+logs/*.jsonl
+eval/results/*.json
+!eval/results/.gitkeep
+.DS_Store
