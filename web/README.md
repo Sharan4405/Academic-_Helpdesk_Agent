@@ -1,6 +1,13 @@
 # Running the web demo
 
-All commands are run from the project root unless stated otherwise.
+Open a terminal in the **project root** (the folder that contains `web/`, `academic_helpdesk/`
+and `requirements.txt`):
+
+```powershell
+cd "C:\Desktop\7th_sem\Autonomour Systems\assignment_02\Academic-_Helpdesk_Agent"
+```
+
+All commands below run from there unless stated otherwise.
 
 ## One-time setup
 
@@ -38,6 +45,8 @@ python -m web.backend.service
 
 Runs at http://127.0.0.1:8000 (use `--port 8080` to change the port). It also serves
 the built frontend, so for normal use this is the only command you need.
+
+If you are already inside `web\backend`, run `python service.py` instead.
 
 ## Frontend
 

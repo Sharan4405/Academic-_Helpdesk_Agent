@@ -24,7 +24,12 @@ import argparse
 import asyncio
 import json
 import os
+import sys
 from pathlib import Path
+
+# Lets `python service.py` work from any directory, not only `python -m web.backend.service`
+# from the project root.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
