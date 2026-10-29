@@ -2,17 +2,35 @@
 
 from __future__ import annotations
 
+import re
+
 from academic_helpdesk import config
 from academic_helpdesk.rag import store
 
-VALID_CATEGORIES = {
-    "academic_rules",
-    "curriculum",
-    "schedule",
-    "office_order",
-    "directory",
-    "template",
-}
+_WORD = re.compile(r"[a-z0-9]{3,}")
+
+
+def _excerpt(text: str, query: str, limit: int) -> str:
+    """The `limit`-character window of `text` that overlaps the query terms most."""
+    if len(text) <= limit:
+        return text
+    terms = set(_WORD.findall(query.lower()))
+    step = max(100, limit // 6)
+    best_start, best_score = 0, -1
+    for start in range(0, len(text) - limit + step, step):
+        window = text[start : start + limit].lower()
+        score = sum(window.count(t) for t in terms)
+        if score > best_score:
+            best_start, best_score = start, score
+    start = max(0, min(best_start, len(text) - limit))
+    if start > 0:  # begin on a word boundary
+        start = text.find(" ", start) + 1 or start
+    piece = text[start : start + limit].rsplit(" ", 1)[0]
+    return ("..." if start > 0 else "") + piece + ("..." if start + limit < len(text) else "")
+
+def valid_categories() -> set[str]:
+    """Categories present in the loaded corpus (they differ between corpora)."""
+    return set(store.known_categories())
 
 
 def search_academic_documents(query: str, category: str) -> dict:
@@ -25,10 +43,9 @@ def search_academic_documents(query: str, category: str) -> dict:
     Args:
         query: The search query. Prefer the student's own wording plus any
             identifier that appears in it (for example "attendance 75% Major
-            examination" or "AR-02.4 condonation").
-        category: Optional filter, one of "academic_rules", "curriculum",
-            "schedule", "office_order", "directory", "template". Pass an empty
-            string to search the whole corpus, which is the usual choice.
+            examination" or "CSL7620").
+        category: Optional category filter. Pass an empty string to search the
+            whole corpus, which is almost always the right choice.
 
     Returns:
         A dict with "results" (each carrying doc_id, title, section, citation and
@@ -40,7 +57,7 @@ def search_academic_documents(query: str, category: str) -> dict:
         return {"results": [], "sufficient_evidence": False, "note": "Empty query."}
 
     category = (category or "").strip()
-    if category and category not in VALID_CATEGORIES:
+    if category and category not in valid_categories():
         category = ""
 
     try:
@@ -60,15 +77,20 @@ def search_academic_documents(query: str, category: str) -> dict:
             citation += f", section '{meta['section']}'"
         if meta.get("order_no"):
             citation += f" (Order/Notice No. {meta['order_no']})"
+        first, last = meta.get("page_start"), meta.get("page_end")
+        if first:
+            citation += f", p. {first}" if first == last or not last else f", pp. {first}-{last}"
         results.append(
             {
                 "doc_id": meta.get("doc_id", ""),
                 "title": meta.get("title", ""),
                 "section": meta.get("section", ""),
                 "category": meta.get("category", ""),
+                "source_url": meta.get("source_url", ""),
+                "doc_date": meta.get("doc_date", ""),
                 "citation": citation,
                 "relevance": round(hit.score, 3),
-                "passage": hit.text,
+                "passage": _excerpt(hit.text, query, config.PASSAGE_MAX_CHARS),
             }
         )
 

@@ -25,9 +25,10 @@ function Meter({ distance, threshold }) {
 function Hit({ hit, rank, threshold, cited, terms }) {
   const [open, setOpen] = useState(false);
   let where = hit.title;
-  if (hit.section && !["(document)", "(preamble)"].includes(hit.section))
-    where += " › " + hit.section;
-  if (hit.order_no) where += ` · Order ${hit.order_no}`;
+  if (hit.page_start)
+    where += hit.page_end && hit.page_end !== hit.page_start
+      ? ` · pp. ${hit.page_start}–${hit.page_end}`
+      : ` · p. ${hit.page_start}`;
   const long = hit.passage.length > 320;
 
   return (

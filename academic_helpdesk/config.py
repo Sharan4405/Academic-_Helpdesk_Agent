@@ -16,7 +16,7 @@ try:
 except ImportError:
     pass
 
-DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR = PROJECT_ROOT / "data1"
 DOCUMENTS_DIR = DATA_DIR / "documents"
 STRUCTURED_DIR = DATA_DIR / "structured"
 RAW_DIR = DATA_DIR / "raw"
@@ -28,11 +28,15 @@ PROCESSED_DIR = DATA_DIR / "processed"
 #                  `python -m academic_helpdesk.rag.extract` into data/processed
 #   "all"       -- both
 CORPUS_SOURCE = os.environ.get("CORPUS_SOURCE", "synthetic").strip().lower()
+#   "prebuilt"  -- the already-embedded index in data1/chroma, imported with
+#                  `python -m academic_helpdesk.rag.import_prebuilt`
 CORPUS_DIRS = {
     "synthetic": [DOCUMENTS_DIR],
     "raw": [PROCESSED_DIR],
     "all": [DOCUMENTS_DIR, PROCESSED_DIR],
+    "prebuilt": [],
 }.get(CORPUS_SOURCE, [DOCUMENTS_DIR])
+PREBUILT_DIR = DATA_DIR / "chroma"
 LOGS_DIR = PROJECT_ROOT / "logs"
 VECTOR_STORE_DIR = PROJECT_ROOT / ".chroma"
 
@@ -47,11 +51,18 @@ OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 EMBEDDING_BACKEND = os.environ.get("EMBEDDING_BACKEND", "ollama").strip().lower()
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "nomic-embed-text")
 
+# Vector store: "chroma" (default) or "numpy", an exact brute-force cosine search
+# with no native dependency. Use numpy if ChromaDB crashes on your machine -- its
+# HNSW code access-violates on some Windows setups. Fine up to ~100k chunks.
+VECTOR_BACKEND = os.environ.get("VECTOR_BACKEND", "chroma").strip().lower()
+
 # The two backends produce different vector dimensions, so they must not share a
 # collection. Keying the name on the backend makes switching safe: you re-ingest
 # into a separate collection instead of corrupting the existing one.
 COLLECTION_NAME = f"academic_documents_{EMBEDDING_BACKEND}"
-if CORPUS_SOURCE != "synthetic":
+if CORPUS_SOURCE == "prebuilt":
+    COLLECTION_NAME = "iitj_academic"
+elif CORPUS_SOURCE != "synthetic":
     COLLECTION_NAME += f"_{CORPUS_SOURCE}"  # likewise, one collection per corpus
 
 # LiteLLM model string -- this is the only thing that changes to swap providers.
@@ -90,6 +101,10 @@ CHUNK_TARGET_CHARS = int(os.environ.get("CHUNK_TARGET_CHARS", "1400"))
 CHUNK_OVERLAP_CHARS = int(os.environ.get("CHUNK_OVERLAP_CHARS", "200"))
 TOP_K = int(os.environ.get("TOP_K", "5"))
 CANDIDATE_K = int(os.environ.get("CANDIDATE_K", "20"))
+# Longest passage handed to the chat model. Pre-embedded chunks can run to
+# thousands of characters; the tool sends the most query-relevant window of each
+# so a request stays inside small per-minute token budgets (Groq free tier).
+PASSAGE_MAX_CHARS = int(os.environ.get("PASSAGE_MAX_CHARS", "1500"))
 
 # A cosine distance above this means "no document in the corpus covers this", and
 # drives a refusal rather than letting the model improvise.

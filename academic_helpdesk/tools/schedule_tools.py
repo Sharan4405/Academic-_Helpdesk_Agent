@@ -59,10 +59,10 @@ def find_courses(department: str, level: int, course_type: str, slot: str) -> di
             "HSS", "CSE"). Empty string means any department.
         level: Course level as an integer: 100, 200, 300, 400, 500, 700. Pass 0
             for any level.
-        course_type: One of "Institute Core", "Programme Core",
-            "Programme Elective", "Open Elective", or the special value
-            "elective" which means Programme Elective OR Open Elective. Empty
-            string means any type.
+        course_type: One of "Institute Core", "Programme Core", "Core Bouquet",
+            "Programme Elective", "HSS Elective", "Project", or the special value
+            "elective" which means any elective (Programme Elective or HSS
+            Elective). Empty string means any type.
         slot: A slot code such as "G" or "P4". Empty string means any slot.
 
     Returns:
@@ -73,7 +73,8 @@ def find_courses(department: str, level: int, course_type: str, slot: str) -> di
     wanted_type = (course_type or "").strip()
     slot_code = (slot or "").strip().upper()
 
-    rows = catalogue.courses()
+    # "offered this semester" means the current term only.
+    rows = [r for r in catalogue.courses() if r["is_current"] == "True"]
     if dept:
         rows = [r for r in rows if r["department"] == dept]
     if level:
@@ -93,14 +94,14 @@ def find_courses(department: str, level: int, course_type: str, slot: str) -> di
             "department": dept or "any",
             "level": level or "any",
             "course_type": (
-                "Programme Elective or Open Elective"
+                "any elective (Programme or HSS)"
                 if wanted_type.lower() in {"elective", "electives"}
                 else (wanted_type or "any")
             ),
             "slot": slot_code or "any",
             "semester": "Semester I 2026-27 (the current semester)",
         },
-        "source": "courses.csv (Course Offering List, Semester I 2026-27)",
+        "source": "courses.csv (course offering list, Semester I 2026-27)",
     }
 
 
@@ -135,7 +136,7 @@ def get_slot_timing(slot_code: str) -> dict:
             for r in catalogue.courses()
             if r["slot"].upper() == code
         ],
-        "source": "slots.csv and SC-02 Timetable Slot System",
+        "source": "timetable.csv (slot system)",
     }
 
 
@@ -169,8 +170,8 @@ def lookup_exam_schedule(course_query: str, exam_type: str) -> dict:
     return {
         "match_count": len(rows),
         "exams": rows,
-        "source": "exam_schedule.csv and SC-03 Examination Schedule Notice (AS/EXAM/2026-27/I/09)",
-        "note": "" if rows else "No matching examination in the published schedule.",
+        "source": "exam schedule table",
+        "note": "" if rows else "No exam table is loaded; exam dates are in the academic calendar documents -- use search_academic_documents.",
     }
 
 
@@ -200,5 +201,5 @@ def check_slot_clash(course_code_a: str, course_code_b: str) -> dict:
         "clash": clash,
         "course_a": {"course_code": row_a["course_code"], "slot": row_a["slot"]},
         "course_b": {"course_code": row_b["course_code"], "slot": row_b["slot"]},
-        "rule": "AR-06.9 and SC-02.1: two courses in the same slot cannot be registered together.",
+        "rule": "Two courses in the same slot cannot be registered together.",
     }

@@ -20,6 +20,7 @@ from google.adk.agents import LlmAgent
 from google.adk.models.lite_llm import LiteLlm
 
 from academic_helpdesk import config, prompts
+from academic_helpdesk.llm_client import PatientLiteLLMClient
 from academic_helpdesk.tools.contact_tools import (
     lookup_course_instructor,
     lookup_faculty_contact,
@@ -75,6 +76,9 @@ def build_model(model_name: str | None = None) -> LiteLlm:
         # only strips unsupported *request* parameters, not fields already
         # baked into message history by the previous response.
         extra["reasoning_format"] = "hidden"
+        # Free-tier Groq caps input tokens per minute, and a multi-agent turn makes
+        # several model calls. This client waits as long as Groq asks, then retries.
+        extra["llm_client"] = PatientLiteLLMClient()
 
     return LiteLlm(model=name, **extra)
 

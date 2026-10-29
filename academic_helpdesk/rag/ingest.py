@@ -20,6 +20,11 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="chunk only, no embedding")
     args = parser.parse_args()
 
+    if config.CORPUS_SOURCE == "prebuilt":
+        from academic_helpdesk.rag.import_prebuilt import main as import_main
+
+        return import_main()
+
     documents = [p for d in config.CORPUS_DIRS for p in sorted(d.glob("*.md"))]
     if not documents:
         hint = (

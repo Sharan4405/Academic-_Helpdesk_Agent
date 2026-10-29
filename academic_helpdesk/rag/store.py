@@ -74,19 +74,46 @@ def embedding_label() -> str:
     return f"{config.EMBEDDING_MODEL} via Ollama at {config.OLLAMA_HOST}"
 
 
-def get_collection() -> chromadb.Collection:
+@lru_cache(maxsize=1)
+def _numpy_collection():
+    from academic_helpdesk.rag.numpy_store import NumpyCollection
+
+    return NumpyCollection(config.VECTOR_STORE_DIR / "numpy", config.COLLECTION_NAME)
+
+
+def get_collection():
+    if config.VECTOR_BACKEND == "numpy":
+        return _numpy_collection()
     return _client().get_or_create_collection(
         name=config.COLLECTION_NAME, metadata={"hnsw:space": "cosine"}
     )
 
 
+def drop_collection() -> None:
+    """Delete the current collection if it exists."""
+    if config.VECTOR_BACKEND == "numpy":
+        _numpy_collection().delete()
+        return
+    try:
+        _client().delete_collection(config.COLLECTION_NAME)
+    except Exception:
+        pass
+
+
+@lru_cache(maxsize=1)
+def known_categories() -> tuple[str, ...]:
+    """Categories actually present in the loaded collection."""
+    try:
+        metas = get_collection().get(include=["metadatas"])["metadatas"]
+    except Exception:
+        return ()
+    return tuple(sorted({m.get("category", "") for m in metas if m.get("category")}))
+
+
 def build_index(*, rebuild: bool = False, batch_size: int = 32, verbose: bool = True) -> int:
     """(Re)build the vector store from the markdown corpus. Returns the chunk count."""
     if rebuild:
-        try:
-            _client().delete_collection(config.COLLECTION_NAME)
-        except Exception:
-            pass
+        drop_collection()
 
     collection = get_collection()
     chunks = chunk_corpus()

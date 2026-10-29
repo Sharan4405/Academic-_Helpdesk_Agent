@@ -61,7 +61,7 @@ def lookup_course_instructor(course_code: str) -> dict:
         "department": instructor.get("department", ""),
         "office": instructor.get("office", ""),
         "phone_extension": instructor.get("phone_extension", ""),
-        "source": "instructors.csv and DIR-01 Faculty Contact Directory",
+        "source": "faculty.csv -- faculty directory",
     }
 
 
@@ -87,7 +87,7 @@ def lookup_faculty_contact(name_or_department: str) -> dict:
     return {
         "match_count": len(matches),
         "matches": matches,
-        "source": "instructors.csv and DIR-01 Faculty Contact Directory",
+        "source": "faculty.csv -- faculty directory",
         "note": "" if matches else "No such faculty member or department in the directory.",
     }
 
@@ -104,11 +104,11 @@ def lookup_office_contact(office: str) -> dict:
     """
     needle = (office or "").strip().lower()
     if not needle:
-        return {"offices": OFFICE_CONTACTS, "source": "DIR-02 Academic Administration Contacts"}
+        return {"offices": OFFICE_CONTACTS, "source": "office contact list (placeholder addresses)"}
 
     hits = {k: v for k, v in OFFICE_CONTACTS.items() if needle in k or k in needle}
     return {
         "offices": hits,
-        "source": "DIR-02 Academic Administration Contacts",
-        "note": "" if hits else "Office not listed in DIR-02.",
+        "source": "office contact list (placeholder addresses)",
+        "note": "" if hits else "Office not in the contact list.",
     }

@@ -10,3 +10,4 @@ eval/results/*.json
 node_modules/
 data/processed/
 pip_install.log
+service.log
