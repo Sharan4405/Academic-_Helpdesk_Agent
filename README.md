@@ -9,8 +9,7 @@ human.
 Course project for *Autonomous Systems*, IIT Jodhpur. A browser demo is in
 [web/](web/README.md).
 
-**Authors:** Jatin Purbia (roll number: ________) — add the other team members and
-their roll numbers here before submission.
+**Authors:** Jatin Purbia (B23CH1022), Anuj Trivedi (B23CH1006), Sharana Gouda Lakshetty (B23CH1042).
 
 ## What it does
 
@@ -127,6 +126,7 @@ python eval/check_retrieval.py     # retrieval recall and refusal separability, 
 python eval/evidence_eval.py       # all 30 questions: is the right evidence handed to the model?
 python eval/run_eval.py --runs 3 --mode multi --tag qwen27-multi   # scores the model's answers
 python eval/make_report_assets.py  # tables and charts for the model runs
+python eval/projection.py          # PROJECTED model results (expectations, not measurements)
 ```
 
 The 30 questions (11 policy, 9 schedule, 5 email, 5 out of scope) are in
@@ -139,6 +139,10 @@ record is found for 24 of 25 answerable questions, the required facts reach the 
 verdict for 15 of 16 questions that have one.
 
 ![Evidence handed to the model, by question category](eval/metrics/charts/evidence_by_category.png)
+
+`eval/metrics/projected_*` (CSV, JSON and three charts) hold the *expected* model results. They are
+projections made before the model runs and are labelled that way in every file; they are not
+measurements.
 
 Scoring the model's own answers (`run_eval.py`) takes hours on Groq's free tier and has
 **not been completed**, so no model accuracy figure is reported. Method, per-question

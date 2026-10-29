@@ -12,3 +12,4 @@ service.log
 .env
 eval/results/*.log
 data1/raw/
+eval/results/partial-*.json

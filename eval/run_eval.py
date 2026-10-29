@@ -292,6 +292,7 @@ async def run_once(
     run_no: int,
     delay: float = 0.0,
     max_retries: int = 4,
+    checkpoint=None,
 ) -> list[dict]:
     results = []
     for index, question in enumerate(questions, 1):
@@ -303,7 +304,9 @@ async def run_once(
         )
         row = score(question, turn, corpus_ids)
         results.append(row)
-        flag = "ERR " if turn.error else ("ok " if row["accurate"] else "MISS")
+        if checkpoint:
+            checkpoint(results)  # an interrupted run keeps everything finished so far
+        flag ="ERR " if turn.error else ("ok " if row["accurate"] else "MISS")
         print(
             f"  run{run_no} [{index:2d}/{len(questions)}] {question['id']} {flag} "
             f"route={row['actual_route']:<16} grounded={row['grounded']}"
@@ -377,7 +380,25 @@ def main() -> int:
         f"| runs={args.runs}"
     )
 
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    safe = re.sub(r"[^A-Za-z0-9._-]", "_", model_label)
+    partial_path = RESULTS_DIR / f"partial-{args.mode}-{safe}-{args.tag or 'run'}.json"
+
     runs: list[list[dict]] = []
+
+    def checkpoint(current: list[dict]) -> None:
+        write_report(
+            partial_path,
+            {
+                "complete": False,
+                "mode": args.mode,
+                "model": model_label,
+                "runs_planned": args.runs,
+                "runs_finished": len(runs),
+                "results": runs + [current],
+            },
+        )
+
     for run_no in range(1, args.runs + 1):
         runs.append(
             asyncio.run(
@@ -389,6 +410,7 @@ def main() -> int:
                     run_no,
                     delay=args.delay,
                     max_retries=args.max_retries,
+                    checkpoint=checkpoint,
                 )
             )
         )
@@ -411,6 +433,7 @@ def main() -> int:
     safe_model = re.sub(r"[^A-Za-z0-9._-]", "_", model_label)
     out_path = RESULTS_DIR / f"eval-{args.mode}-{safe_model}{tag}-{stamp}.json"
     write_report(out_path, payload)
+    partial_path.unlink(missing_ok=True)  # the finished file supersedes the checkpoint
 
     for i, summary in enumerate(summaries, 1):
         print_summary(f"run {i} | {args.mode} | {model_label}", summary)

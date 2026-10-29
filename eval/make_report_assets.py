@@ -63,11 +63,28 @@ def model_name(model: str) -> str:
 
 
 def label_of(payload: dict) -> str:
-    return f"{model_name(payload['model'])} · {payload['mode']}-agent"
+    base = f"{model_name(payload['model'])} · {payload['mode']}-agent"
+    return f"{base} [partial: {payload['answered']} answered]" if payload.get("partial") else base
 
 
 def load(paths: list[Path]) -> list[dict]:
-    payloads = [{"path": p, **json.loads(p.read_text(encoding="utf-8"))} for p in paths]
+    payloads = []
+    for p in paths:
+        payload = {"path": p, **json.loads(p.read_text(encoding="utf-8"))}
+        if "per_run_summary" not in payload:  # a checkpoint from a run still in progress
+            from run_eval import consistency, summarise
+
+            runs = [r for r in payload["results"] if r]
+            payload.update(
+                partial=True,
+                answered=sum(len(r) for r in runs),
+                runs=len(runs),
+                per_run_summary=[summarise(r) for r in runs],
+                consistency=consistency(runs),
+                results=runs,
+                timestamp=payload.get("timestamp", "9999"),
+            )
+        payloads.append(payload)
     newest: dict[str, dict] = {}
     for payload in sorted(payloads, key=lambda p: p["timestamp"]):
         newest[label_of(payload)] = payload  # later runs of the same configuration win
@@ -331,7 +348,8 @@ def chart_grid(payloads: list[dict]) -> Path:
 
 
 def main() -> int:
-    paths = [Path(a) for a in sys.argv[1:]] or sorted(RESULTS.glob("eval-*.json"))
+    # finished results; if none yet, fall back to the checkpoints of runs in progress
+    paths = [Path(a) for a in sys.argv[1:]] or sorted(RESULTS.glob("eval-*.json")) or sorted(RESULTS.glob("partial-*.json"))
     if not paths:
         print("No result files in eval/results/. Run eval/run_eval.py first.")
         return 1

@@ -1,0 +1,102 @@
+{
+  "measured": false,
+  "status": "projected (not measured)",
+  "models": {
+    "Qwen3.8-27B": {
+      "accuracy_pct": {
+        "Rules & calendar": [
+          65,
+          80
+        ],
+        "Timetable": [
+          80,
+          95
+        ],
+        "Email": [
+          85,
+          100
+        ],
+        "Must refuse": [
+          80,
+          100
+        ],
+        "Overall": [
+          75,
+          91
+        ]
+      },
+      "groundedness_pct_overall": [
+        60,
+        86
+      ],
+      "questions_changing_between_runs": [
+        2,
+        5
+      ]
+    },
+    "gpt-oss-120B": {
+      "accuracy_pct": {
+        "Rules & calendar": [
+          70,
+          85
+        ],
+        "Timetable": [
+          85,
+          98
+        ],
+        "Email": [
+          90,
+          100
+        ],
+        "Must refuse": [
+          80,
+          100
+        ],
+        "Overall": [
+          80,
+          94
+        ]
+      },
+      "groundedness_pct_overall": [
+        65,
+        89
+      ],
+      "questions_changing_between_runs": [
+        1,
+        4
+      ]
+    },
+    "gpt-oss-20B": {
+      "accuracy_pct": {
+        "Rules & calendar": [
+          60,
+          75
+        ],
+        "Timetable": [
+          70,
+          90
+        ],
+        "Email": [
+          75,
+          95
+        ],
+        "Must refuse": [
+          60,
+          100
+        ],
+        "Overall": [
+          66,
+          87
+        ]
+      },
+      "groundedness_pct_overall": [
+        51,
+        82
+      ],
+      "questions_changing_between_runs": [
+        3,
+        8
+      ]
+    }
+  }
+}
