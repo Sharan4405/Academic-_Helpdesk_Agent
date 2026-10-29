@@ -13,3 +13,4 @@ pip_install.log
 service.log
 .env
 eval/results/*.log
+data1/raw/

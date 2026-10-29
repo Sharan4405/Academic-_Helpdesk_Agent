@@ -23,13 +23,12 @@ RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 
 # Which corpus the RAG index is built from:
-#   "synthetic" -- the hand-written documents in data/documents (what eval/ scores)
-#   "raw"       -- the real institute files in data/raw, run through
-#                  `python -m academic_helpdesk.rag.extract` into data/processed
-#   "all"       -- both
-CORPUS_SOURCE = os.environ.get("CORPUS_SOURCE", "synthetic").strip().lower()
-#   "prebuilt"  -- the already-embedded index in data1/chroma, imported with
-#                  `python -m academic_helpdesk.rag.import_prebuilt`
+#   "prebuilt"  -- the already-embedded index in data1/chroma, loaded with
+#                  `python -m academic_helpdesk.rag.import_prebuilt` (the default)
+#   "raw"       -- source files placed in data1/raw, extracted into data1/processed
+#                  with `python -m academic_helpdesk.rag.extract`, then embedded
+#   "synthetic" / "all" -- hand-written markdown in data1/documents (not shipped)
+CORPUS_SOURCE = os.environ.get("CORPUS_SOURCE", "prebuilt").strip().lower()
 CORPUS_DIRS = {
     "synthetic": [DOCUMENTS_DIR],
     "raw": [PROCESSED_DIR],
@@ -48,7 +47,7 @@ OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 #               needs no server at all and so lets a hosted chat model (Groq,
 #               OpenAI, Anthropic) run the whole system without Ollama. Groq
 #               serves no embeddings endpoint, so this is required there.
-EMBEDDING_BACKEND = os.environ.get("EMBEDDING_BACKEND", "ollama").strip().lower()
+EMBEDDING_BACKEND = os.environ.get("EMBEDDING_BACKEND", "local").strip().lower()
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "nomic-embed-text")
 
 # Vector store: "chroma" (default) or "numpy", an exact brute-force cosine search
@@ -81,7 +80,7 @@ elif CORPUS_SOURCE != "synthetic":
 #     -H "Authorization: Bearer $GROQ_API_KEY" | python -m json.tool
 # For Ollama, prefer the "ollama_chat/" prefix over the legacy "ollama/"
 # completion path -- it gives markedly better tool-calling behaviour.
-CHAT_MODEL = os.environ.get("HELPDESK_MODEL", "ollama_chat/qwen3:8b")
+CHAT_MODEL = os.environ.get("HELPDESK_MODEL", "groq/qwen/qwen3.8-27b")
 
 # Environment variable LiteLLM expects for each non-Ollama provider prefix, used
 # to fail fast with a useful message instead of a provider-side 401.
@@ -99,12 +98,12 @@ PROVIDER_API_KEY_ENV = {
 # Retrieval
 CHUNK_TARGET_CHARS = int(os.environ.get("CHUNK_TARGET_CHARS", "1400"))
 CHUNK_OVERLAP_CHARS = int(os.environ.get("CHUNK_OVERLAP_CHARS", "200"))
-TOP_K = int(os.environ.get("TOP_K", "5"))
+TOP_K = int(os.environ.get("TOP_K", "3"))
 CANDIDATE_K = int(os.environ.get("CANDIDATE_K", "60"))
 # Longest passage handed to the chat model. Pre-embedded chunks can run to
 # thousands of characters; the tool sends the most query-relevant window of each
 # so a request stays inside small per-minute token budgets (Groq free tier).
-PASSAGE_MAX_CHARS = int(os.environ.get("PASSAGE_MAX_CHARS", "1500"))
+PASSAGE_MAX_CHARS = int(os.environ.get("PASSAGE_MAX_CHARS", "1000"))
 
 # A cosine distance above this means "no document in the corpus covers this", and
 # drives a refusal rather than letting the model improvise.
@@ -119,7 +118,10 @@ PASSAGE_MAX_CHARS = int(os.environ.get("PASSAGE_MAX_CHARS", "1500"))
 # "what is my attendance in CSL7620" is legitimately close to the attendance
 # policy. Scope is enforced by the orchestrator's explicit out-of-scope list in
 # prompts.REFUSAL_BLOCK. See report section 8.3.
-_DEFAULT_MAX_DISTANCE = {"local": "0.55", "ollama": "0.62"}
+# Measured on the prebuilt index (eval/check_retrieval.py): in-scope best distances run
+# 0.28-0.62, out-of-scope 0.47-0.74. They overlap, so this is only a backstop; topical
+# scope is enforced by the orchestrator's refusal list.
+_DEFAULT_MAX_DISTANCE = {"local": "0.50", "ollama": "0.62"}
 MAX_RELEVANT_DISTANCE = float(
     os.environ.get(
         "MAX_RELEVANT_DISTANCE", _DEFAULT_MAX_DISTANCE.get(EMBEDDING_BACKEND, "0.60")

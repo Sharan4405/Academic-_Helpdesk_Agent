@@ -6,7 +6,11 @@ academic rules, curriculum and credits, the timetable and course offerings, and 
 emails to course instructors. Anything outside that scope it refuses, and logs for a
 human.
 
-Course project for *Autonomous Systems*. A browser demo is in [web/](web/README.md).
+Course project for *Autonomous Systems*, IIT Jodhpur. A browser demo is in
+[web/](web/README.md).
+
+**Authors:** Jatin Purbia (roll number: ________) — add the other team members and
+their roll numbers here before submission.
 
 ## What it does
 
@@ -73,7 +77,6 @@ academic_helpdesk/
 data1/
   chroma/           the pre-embedded index (390 chunks, 33 documents, MiniLM 384-d)
   structured/       courses.csv, timetable.csv, faculty.csv, doc_authority.csv
-  raw/              the source PDFs / DOCX / XLSX
 eval/               30-question evaluation set, harness, summariser, deterministic checks
 web/                backend/service.py (FastAPI) and frontend/ (React)
 report/REPORT.md    method and findings
@@ -92,6 +95,11 @@ python -m academic_helpdesk.rag.import_prebuilt
 `import_prebuilt` loads the 390 stored vectors from `data1/chroma` as they are and checks
 that the query embedder (ChromaDB's bundled all-MiniLM-L6-v2) reproduces them (cosine
 1.0000). Groq has no embeddings endpoint, which is why embeddings run locally.
+
+The defaults need no `.env` beyond the key: `CORPUS_SOURCE=prebuilt`, local embeddings,
+`groq/qwen/qwen3.8-27b`, `TOP_K=3`. To index your own files instead, put them in
+`data1/raw/` (git-ignored), set `CORPUS_SOURCE=raw`, then run
+`python -m academic_helpdesk.rag.extract` and `python -m academic_helpdesk.rag.ingest`.
 
 The chat model is any LiteLLM string in `HELPDESK_MODEL`: `groq/qwen/qwen3.8-27b` (the
 default here), `groq/openai/gpt-oss-20b`, or a local `ollama_chat/qwen3:8b`. Groq retires
