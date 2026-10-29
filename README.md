@@ -78,7 +78,8 @@ data1/
   structured/       courses.csv, timetable.csv, faculty.csv, doc_authority.csv
 eval/               30-question evaluation set, harness, summariser, deterministic checks
 web/                backend/service.py (FastAPI) and frontend/ (React)
-report/REPORT.md    method and findings
+report/REPORT.tex   the project report (LaTeX source; compile with pdflatex, twice)
+report/REPORT.md    earlier Markdown summary, superseded by the LaTeX report
 ```
 
 ## Setup
@@ -126,7 +127,7 @@ python eval/check_retrieval.py     # retrieval recall and refusal separability, 
 python eval/evidence_eval.py       # all 30 questions: is the right evidence handed to the model?
 python eval/run_eval.py --runs 3 --mode multi --tag qwen27-multi   # scores the model's answers
 python eval/make_report_assets.py  # tables and charts for the model runs
-python eval/projection.py          # PROJECTED model results (expectations, not measurements)
+python eval/estimates.py           # single-point ESTIMATES (assumed counts, not measurements)
 ```
 
 The 30 questions (11 policy, 9 schedule, 5 email, 5 out of scope) are in
@@ -140,14 +141,23 @@ verdict for 15 of 16 questions that have one.
 
 ![Evidence handed to the model, by question category](eval/metrics/charts/evidence_by_category.png)
 
-`eval/metrics/projected_*` (CSV, JSON and three charts) hold the *expected* model results. They are
-projections made before the model runs and are labelled that way in every file; they are not
-measurements.
+**Estimates, not measurements.** The model-answer evaluation did not complete, so the report's
+section "Single-point model estimates (not measured)" shows what a results table will look like using
+*assumed* integer counts of correct answers per model and category; percentages are $100k/n$ from those
+counts. The assumed totals are 25/30 for Qwen3.8-27B, 26/30 for gpt-oss-120B and 22/30 for gpt-oss-20B
+(assumed correct and cited: 22, 23 and 19; assumed changed verdicts across repetitions: 3, 2 and 5).
+They are neither observed results nor statistically calibrated predictions, and they do not establish a
+ranking of the models; one answer moves a category score by 9.1 to 20 points. `eval/estimates.py` writes
+them to `eval/metrics/estimated_results.csv` / `.json` and three charts
+([matrix](eval/metrics/charts/estimated_matrix.png),
+[by category](eval/metrics/charts/estimated_accuracy_by_category.png),
+[overall](eval/metrics/charts/estimated_overall.png)); every file is marked as not measured. Replace
+them by running `run_eval.py` and `make_report_assets.py`; measured values always take precedence.
 
 Scoring the model's own answers (`run_eval.py`) takes hours on Groq's free tier and has
-**not been completed**, so no model accuracy figure is reported. Method, per-question
-results, defects found and limitations are in [report/REPORT.md](report/REPORT.md);
-tables and charts are in [eval/metrics/](eval/metrics/).
+**not been completed**, so there is no measured model accuracy figure. Method, per-question
+results, defects found and limitations are in the report
+([report/REPORT.tex](report/REPORT.tex)); tables and charts are in [eval/metrics/](eval/metrics/).
 
 ## Unanswered-question log
 
@@ -166,4 +176,6 @@ in-scope questions the corpus does not cover, which is the backlog of documents 
 - No access to any individual student's record: attendance, grades and registration
   status questions are refused by design.
 - Email drafts are drafts. Nothing is sent and no mail credentials exist.
+- The assignment's suggested local setup (an 8B model on Ollama, 16 GB) was not run; all model behaviour
+  comes from Groq-hosted models, so the local-deployment requirement is untested.
 - Conversation memory is in-process; restarting starts a new conversation.

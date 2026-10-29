@@ -3,12 +3,12 @@
 % Compile with:  pdflatex REPORT.tex  (twice, for the table of contents)
 % Self-contained: all figures are drawn in TikZ/pgfplots; no external files are needed.
 % =====================================================================
-\documentclass[11pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[margin=2.4cm]{geometry}
+\usepackage[margin=2.0cm]{geometry}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{tabularx}
@@ -32,10 +32,10 @@
 \pgfplotsset{compat=1.17}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
 
-\setlist{itemsep=2pt,topsep=4pt}
-\setlength{\parskip}{4pt}
+\setlist{itemsep=1pt,topsep=2pt}
+\setlength{\parskip}{2pt}
 \setlength{\parindent}{0pt}
-\renewcommand{\arraystretch}{1.12}
+\renewcommand{\arraystretch}{1.06}
 
 % Identifiers and file names: underscores and braces are printed literally.
 \newcommand{\code}[1]{\texttt{\detokenize{#1}}}
@@ -91,7 +91,7 @@ Repository: \url{https://github.com/Sharan4405/Academic-_Helpdesk_Agent}
 % ---------------------------------------------------------------------
 \begin{abstract}
 \noindent
-We built a multi-agent academic helpdesk for IIT Jodhpur that answers questions on rules, curriculum, the timetable and course offerings, drafts (never sends) emails to instructors, and refuses and logs everything else. An orchestrator routes each question to a policy, schedule or email agent. Rules are answered by retrieval over 33 official documents (390 chunks); counts, slots and contacts come from deterministic CSV tools. The evaluation set has 30 questions in four categories. Without a chat model, the evidence given to the agent is right for 24 of 25 answerable questions, 15 of 16 evidence verdicts are correct, 48 tool assertions pass, and the expected document ranks first for 10 of 11 policy questions (MRR 0.918). Trimming prompts and tool definitions cut a turn from about 120~s to about 70~s on a rate-limited hosted model. The main trade-off is that scope refusal cannot be enforced by retrieval distance (the in-scope and out-of-scope ranges overlap by 0.142) and so depends on the prompt. Model-answer scoring was not completed; a clearly labelled projection is given instead. The key lesson is to inspect what the model is shown: two defects were in the evidence, not the model.
+We built a multi-agent academic helpdesk for IIT Jodhpur that answers questions on rules, curriculum, the timetable and course offerings, drafts (never sends) emails to instructors, and refuses and logs everything else. An orchestrator routes each question to a policy, schedule or email agent. Rules are answered by retrieval over 33 official documents (390 chunks); counts, slots and contacts come from deterministic CSV tools. The evaluation set has 30 questions in four categories. Without a chat model, the evidence given to the agent is right for 24 of 25 answerable questions, 15 of 16 evidence verdicts are correct, 48 tool assertions pass, and the expected document ranks first for 10 of 11 policy questions (MRR 0.918). Trimming prompts and tool definitions cut a turn from about 120~s to about 70~s on a rate-limited hosted model. The main trade-off is that scope refusal cannot be enforced by retrieval distance (the in-scope and out-of-scope ranges overlap by 0.142) and so depends on the prompt. Model-answer scoring was not completed; explicitly labelled single-point estimates are given instead. The key lesson is to inspect what the model is shown: two defects were in the evidence, not the model.
 \end{abstract}
 
 \noindent\textbf{Keywords:} retrieval-augmented generation; multi-agent systems; Google ADK; academic helpdesk; grounded citation; refusal; hybrid retrieval; evaluation.
@@ -634,7 +634,7 @@ Out of scope (5) & n/a & n/a & 4/5\\
 \end{figure}
 
 \subsection{Model-answer evaluation: status}
-The model-answer evaluation specified in Section~\ref{sec:evalmethod} was started: Qwen3.8-27B multi-agent with 3 repetitions and gpt-oss-20B multi-agent with 2 repetitions, 150 graded outputs in all. When this report was written neither run had completed a single question. The cause is the hosted free tier: one question needs three to five model calls of 1,400 to 4,600 tokens each against a limit of about 8,000 tokens per minute, and the runs were repeatedly held back by rate-limit waits of 76 to 90 seconds. Consequently \textbf{no accuracy, groundedness, refusal-rate, routing or consistency figure for the model's answers is reported, and none should be inferred from this report.} A labelled projection of the expected results is given in Section~\ref{sec:projection}; it is not a result. The strongest statements the measurements support are the evidence evaluation above, the deterministic checks of Section~\ref{sec:results} and the four observed answers below.
+The model-answer evaluation specified in Section~\ref{sec:evalmethod} was started: Qwen3.8-27B multi-agent with 3 repetitions and gpt-oss-20B multi-agent with 2 repetitions, 150 graded outputs in all. When this report was written neither run had completed a single question. The cause is the hosted free tier: one question needs three to five model calls of 1,400 to 4,600 tokens each against a limit of about 8,000 tokens per minute, and the runs were repeatedly held back by rate-limit waits of 76 to 90 seconds. Consequently \textbf{no measured accuracy, groundedness, refusal-rate, routing or consistency figure for model answers is available.} Section~\ref{sec:estimates} gives explicitly hypothetical single-point estimates, which must not be interpreted as actual scores. The strongest statements the measurements support are the evidence evaluation above, the deterministic checks of Section~\ref{sec:results} and the four observed answers below.
 
 \begin{table}[H]
 \centering\small
@@ -650,35 +650,36 @@ Single-agent baseline & -- & -- & not run\\
 \end{tabular}
 \end{table}
 
-\subsection{Projected results (not measured)}\label{sec:projection}
-\textbf{Everything in this subsection is a projection made before the model runs, not a result.} The model-answer evaluation did not complete (Table~\ref{tab:status}), so no figure below was measured on a model; the projection is given so that a reader can see what the planned evaluation is expected to show and can check it against the real runs when they exist. The ranges are judgements, derived as described in Table~\ref{tab:basis}, and are deliberately wide: with 30 questions, one question moves a category score by 9 to 20 points.
+\subsection{Single-point model estimates (not measured)}\label{sec:estimates}
+\textbf{All model-specific scores in this subsection are estimates, not measurements.} Because full model evaluation did not complete, illustrative integer counts of correct answers were assumed for each category. The percentages are calculated as $100k/n$ from those hypothetical counts, and overall accuracy uses the total correct answers out of 30. The point estimates are neither observed experimental results nor statistically calibrated predictions. One answer changes a category score by 9.1 points (rules), 11.1 points (timetable), or 20 points (email and refusal).
 
 \begin{table}[H]
 \centering\small
-\caption{Basis of the projection. Only the first row is a measurement.}\label{tab:basis}
+\caption{Basis of point estimates. Only the first row is a systematic measurement.}\label{tab:basis}
 \begin{tabularx}{\textwidth}{@{}l Y l@{}}
 \toprule
 \textbf{Input} & \textbf{How it is used} & \textbf{Status}\\
 \midrule
 Evidence ceiling (Table~\ref{tab:evidence}) & No model can exceed the evidence it is given: rules 10 of 11 with facts present plus Q11 answerable by an honest ``not specified'', timetable 9 of 9, email 5 of 5, refusal 4 of 5 by evidence with Q27 left to the prompt & measured\\
-Model reliability & Share of the achievable score each model is expected to convert: highest for \code{gpt-oss-120b} (largest), then Qwen3.8-27B, then \code{gpt-oss-20b}; highest for tool-answered categories, lowest for rules, which need reading and citing a passage & judgement\\
+Model reliability & Hypothetical integer correct-answer counts favour tool-based categories; an assumed model ordering is used for illustration but has not been experimentally established & assumption\\
 Early observations & Qwen3.8-27B answered the 4 sampled questions correctly (Table~\ref{tab:observed}). A stopped partial run of \code{gpt-oss-20b} on Q01--Q10, made before the passage-window fix and whose log was not kept, gave 7 accurate, 6 grounded and 10 correctly routed & observed, not scored\\
-Groundedness & Expected 5 to 15 points below accuracy, because scoring requires the exact document identifier in the answer & judgement\\
-Run-to-run change & Expected number of questions whose verdict differs between repetitions, larger for smaller models & judgement\\
+Groundedness & Assumed correctly answered and cited counts of 22, 23 and 19 out of 30 for Qwen, 120B and 20B; all are below their corresponding accuracy counts & assumption\\
+Run-to-run change & Assumed counts of changing verdicts across repetitions: 3, 2 and 5 respectively; no repetitions have been graded & assumption\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \begin{table}[H]
 \centering\small
-\caption{\textbf{Projected} accuracy (\%) by model and category, as a range (low--high); question counts in brackets. Cell shading by range midpoint: green $\ge$90, yellow 80--89, orange 70--79, red $<$70. These are projections, not measurements.}\label{tab:matrix}
+\caption{\textbf{Estimated, not measured} accuracy by model and category. Each cell gives assumed correct answers and the corresponding percentage; overall uses all 30 questions.}\label{tab:matrix}
+\scriptsize
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 \textbf{Model} & \textbf{Rules (11)} & \textbf{Timetable (9)} & \textbf{Email (5)} & \textbf{Refuse (5)} & \textbf{Overall (30)}\\
 \midrule
-Qwen3.8-27B & \cellcolor{orange!30}65--80 & \cellcolor{yellow!35}80--95 & \cellcolor{green!25}85--100 & \cellcolor{green!25}80--100 & \cellcolor{yellow!35}75--91\\
-gpt-oss-120B & \cellcolor{orange!30}70--85 & \cellcolor{green!25}85--98 & \cellcolor{green!25}90--100 & \cellcolor{green!25}80--100 & \cellcolor{yellow!35}80--94\\
-gpt-oss-20B & \cellcolor{red!18}60--75 & \cellcolor{yellow!35}70--90 & \cellcolor{yellow!35}75--95 & \cellcolor{yellow!35}60--100 & \cellcolor{orange!30}66--87\\
+Qwen3.8-27B & \cellcolor{orange!30}8/11 (72.7\%) & \cellcolor{yellow!35}8/9 (88.9\%) & \cellcolor{green!25}5/5 (100\%) & \cellcolor{yellow!35}4/5 (80\%) & \cellcolor{yellow!35}25/30 (83.3\%)\\
+gpt-oss-120B & \cellcolor{yellow!35}9/11 (81.8\%) & \cellcolor{yellow!35}8/9 (88.9\%) & \cellcolor{green!25}5/5 (100\%) & \cellcolor{yellow!35}4/5 (80\%) & \cellcolor{yellow!35}26/30 (86.7\%)\\
+gpt-oss-20B & \cellcolor{red!18}7/11 (63.6\%) & \cellcolor{orange!30}7/9 (77.8\%) & \cellcolor{yellow!35}4/5 (80\%) & \cellcolor{yellow!35}4/5 (80\%) & \cellcolor{orange!30}22/30 (73.3\%)\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -694,25 +695,25 @@ gpt-oss-20B & \cellcolor{red!18}60--75 & \cellcolor{yellow!35}70--90 & \cellcolo
   ymajorgrids,grid style={black!12},tick label style={font=\footnotesize},
   legend style={at={(0.5,1.04)},anchor=south,legend columns=-1,font=\footnotesize,draw=none},
   enlarge x limits=0.12]
-\addplot[fill=blue!70!black,draw=none,error bars/.cd,y dir=both,y explicit,error bar style={black!70}] coordinates {(Rules,72.5) +- (0,7.5) (Timetable,87.5) +- (0,7.5) (Email,92.5) +- (0,7.5) (Refuse,90) +- (0,10) (Overall,83) +- (0,8)};
-\addplot[fill=orange!85!red,draw=none,error bars/.cd,y dir=both,y explicit,error bar style={black!70}] coordinates {(Rules,77.5) +- (0,7.5) (Timetable,91.5) +- (0,6.5) (Email,95) +- (0,5) (Refuse,90) +- (0,10) (Overall,87) +- (0,7)};
-\addplot[fill=teal!70!green,draw=none,error bars/.cd,y dir=both,y explicit,error bar style={black!70}] coordinates {(Rules,67.5) +- (0,7.5) (Timetable,80) +- (0,10) (Email,85) +- (0,10) (Refuse,80) +- (0,20) (Overall,76.5) +- (0,10.5)};
+\addplot[fill=blue!70!black,draw=none] coordinates {(Rules,72.7) (Timetable,88.9) (Email,100) (Refuse,80) (Overall,83.3)};
+\addplot[fill=orange!85!red,draw=none] coordinates {(Rules,81.8) (Timetable,88.9) (Email,100) (Refuse,80) (Overall,86.7)};
+\addplot[fill=teal!70!green,draw=none] coordinates {(Rules,63.6) (Timetable,77.8) (Email,80) (Refuse,80) (Overall,73.3)};
 \legend{Qwen3.8-27B,gpt-oss-120B,gpt-oss-20B}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{Projected} accuracy by model and category (bar: range midpoint; whisker: projected low--high range). This is a projection, not a measurement; the ranges overlap, so the figure does not rank the models with confidence.}\label{fig:projcat}
+\caption{\textbf{Estimated, not measured} accuracy by model and category. Bars show hypothetical single-point scores computed from the counts in Table~\ref{tab:matrix}; they do not establish a measured ranking.}\label{fig:estcat}
 \end{figure}
 
 \begin{table}[H]
 \centering\small
-\caption{\textbf{Projected} overall accuracy, groundedness and run-to-run change per model. Not measured.}\label{tab:projground}
+\caption{\textbf{Estimated, not measured} overall accuracy, groundedness and run-to-run changes. All are illustrative assumptions.}\label{tab:estground}
 \begin{tabular}{@{}lccc@{}}
 \toprule
 \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Groundedness (\%)} & \textbf{Questions changing between runs (of 30)}\\
 \midrule
-Qwen3.8-27B & 75--91 & 60--86 & 2--5\\
-gpt-oss-120B & 80--94 & 65--89 & 1--4\\
-gpt-oss-20B & 66--87 & 51--82 & 3--8\\
+Qwen3.8-27B & 83.3 (25/30) & 73.3 (22/30) & 3\\
+gpt-oss-120B & 86.7 (26/30) & 76.7 (23/30) & 2\\
+gpt-oss-20B & 73.3 (22/30) & 63.3 (19/30) & 5\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -727,15 +728,15 @@ gpt-oss-20B & 66--87 & 51--82 & 3--8\\
   ymajorgrids,grid style={black!12},tick label style={font=\footnotesize},
   legend style={at={(0.5,1.04)},anchor=south,legend columns=-1,font=\footnotesize,draw=none},
   enlarge x limits=0.25]
-\addplot[fill=blue!70!black,draw=none,error bars/.cd,y dir=both,y explicit,error bar style={black!70}] coordinates {(Q,83) +- (0,8) (G120,87) +- (0,7) (G20,76.5) +- (0,10.5)};
-\addplot[fill=orange!85!red,draw=none,error bars/.cd,y dir=both,y explicit,error bar style={black!70}] coordinates {(Q,73) +- (0,13) (G120,77) +- (0,12) (G20,66.5) +- (0,15.5)};
+\addplot[fill=blue!70!black,draw=none] coordinates {(Q,83.3) (G120,86.7) (G20,73.3)};
+\addplot[fill=orange!85!red,draw=none] coordinates {(Q,73.3) (G120,76.7) (G20,63.3)};
 \legend{Accuracy,Groundedness}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{Projected} overall accuracy and groundedness per model (bar: midpoint; whisker: projected range). Groundedness is projected below accuracy because the scorer requires the exact document identifier. Projection, not measurement.}\label{fig:projground}
+\caption{\textbf{Estimated, not measured} overall accuracy and groundedness. Bars are hypothetical counts divided by 30; groundedness additionally requires correct citations.}\label{fig:estground}
 \end{figure}
 
-The projection is stored, with the same ranges, in \code{eval/metrics/projected_results.csv} and \code{projected_results.json} and drawn by \code{python eval/projection.py} (charts \code{projected_matrix.png}, \code{projected_accuracy_by_category.png}, \code{projected_overall.png}); every file is marked as not measured. \textbf{How to replace the projection with measurements.} Run the two evaluation commands of Section~\ref{sec:repro} (and the same for \code{groq/openai/gpt-oss-120b}), then \code{python eval/make_report_assets.py}; it writes the measured tables and charts that take the place of Tables~\ref{tab:matrix} and~\ref{tab:projground}. If a measured value falls outside its projected range, the projection, not the measurement, is the thing to revise.
+\textbf{How to replace estimates with measurements.} Run the two evaluation commands of Section~\ref{sec:repro} (and the same for \code{groq/openai/gpt-oss-120b}), then \code{python eval/make_report_assets.py}; replace these illustrative counts and charts with measured outputs. Actual measurements always take precedence over the estimates.
 
 \subsection{Observed model behaviour (not scored)}
 Four answers were observed from the full system on \code{qwen/qwen3.8-27b}; they illustrate the intended behaviour and are not a sample.
@@ -850,7 +851,7 @@ After trimming & 1,386 & 2,026 & 3,237 & 4,632\\
 \textbf{Claim.} A distance threshold does not separate in-scope from out-of-scope questions. \textbf{Evidence.} Best cosine distance is 0.28--0.62 for in-scope and 0.47--0.74 for out-of-scope questions, an overlap of 0.142. At the 0.50 threshold four of five out-of-scope questions fail the evidence check; Q27 (reaching the campus from the city) passes it. \textbf{Interpretation.} The orchestrator's explicit list of out-of-scope topics is the real safeguard, which makes refusal behaviour dependent on the model following its prompt. Its strength was observed on one question (dining); the correct-refusal rate over Q26--Q30 was not measured on the model.
 
 \subsection*{Finding 6: model comparison is not established}
-\textbf{Claim.} Which of the two models is better, whether either is unsuitable, and which answers change between repetitions cannot be stated. \textbf{Evidence.} No model-answer score was completed (Table~\ref{tab:status}). \textbf{Interpretation.} The comparison the project plan calls for remains open; the projection in Section~\ref{sec:projection} states what it is expected to show but is not evidence; the harness and the commands that produce it are in Section~\ref{sec:repro}. A third model, \code{llama-3.1-8b-instant}, was planned but is no longer served by the provider (the API returned \code{model_not_found}).
+\textbf{Claim.} Which of the two models is better, whether either is unsuitable, and which answers change between repetitions cannot be stated. \textbf{Evidence.} No model-answer score was completed (Table~\ref{tab:status}). \textbf{Interpretation.} The comparison the project plan calls for remains open; the point estimates in Section~\ref{sec:estimates} are illustrative assumptions and not comparative evidence; the harness and the commands that produce measured results are in Section~\ref{sec:repro}. A third model, \code{llama-3.1-8b-instant}, was planned but is no longer served by the provider (the API returned \code{model_not_found}).
 
 % =====================================================================
 \section{Failure Modes and Limitations}\label{sec:limits}
@@ -864,7 +865,7 @@ After trimming & 1,386 & 2,026 & 3,237 & 4,632\\
   \item \textbf{Latency.} About 70~s per turn on the free tier when the account is otherwise idle; under the evaluation load the runs were held back by waits of 76 to 90 seconds. Per-question latency was not recorded, so accuracy cannot be related to latency; only the turn time of one question before and after trimming was measured.
   \item \textbf{Strict scoring.} Groundedness requires an expected source identifier in the answer; an answer that names a document in words only scores as ungrounded. Correct answers were initially marked wrong when the model used non-breaking spaces or curly quotes; scoring now normalises text, but residual mismatches remain possible.
   \item \textbf{Ground-truth errors.} Q18 originally expected 8 courses in slot G; one was from Semester II 2025--26, so the correct current-semester count is 7. An error in the reference answers would silently penalise a correct system.
-  \item \textbf{Incomplete model evaluation.} Model-answer metrics, the single-agent baseline and a cross-model comparison were not completed (Section~\ref{sec:results}); Section~\ref{sec:projection} gives a projection only.
+  \item \textbf{Incomplete model evaluation.} Model-answer metrics, the single-agent baseline and a cross-model comparison were not completed (Section~\ref{sec:results}); Section~\ref{sec:estimates} gives illustrative point estimates only.
   \item \textbf{Native-library instability.} ChromaDB's native index crashed and ONNX Runtime 1.22 or later failed to initialise on the development machine; the system therefore pins ONNX Runtime 1.20.1 and offers an exact NumPy search.
   \item \textbf{Exposed credential.} The API key was committed early and remains in repository history.
   \item \textbf{Local deployment untested.} The assignment suggests an 8B model served by Ollama and a local embedding model on a 16~GB machine. The system supports this by changing one configuration string, but no local-model run was made, so the 16~GB requirement and the quality of an 8B model are unverified; all model behaviour reported here is from hosted models.
@@ -918,7 +919,7 @@ python -m web.backend.service                            # web demo, http://127.
 % =====================================================================
 \section{Conclusion}
 % =====================================================================
-The helpdesk shows that a question-answering assistant can be made trustworthy by moving everything computable out of the model and making refusal depend on evidence. Counts, slots and contacts come from tools; rules come from retrieval that knows which circular supersedes which; drafts are rendered from fixed templates; a terminal client and a web interface expose the same system. Without a chat model, the evidence handed to the agent is right for 24 of 25 answerable questions, and the expected document ranks first for 10 of 11 policy questions. The pattern that emerged is that the weak points were in the evidence and the prompts, not in retrieval recall. The best configuration and its trade-off against latency cannot yet be stated, because no scored model run was completed; the expectation in Section~\ref{sec:projection} is a projection, not a finding.
+The helpdesk shows that a question-answering assistant can be made trustworthy by moving everything computable out of the model and making refusal depend on evidence. Counts, slots and contacts come from tools; rules come from retrieval that knows which circular supersedes which; drafts are rendered from fixed templates; a terminal client and a web interface expose the same system. Without a chat model, the evidence handed to the agent is right for 24 of 25 answerable questions, and the expected document ranks first for 10 of 11 policy questions. The pattern that emerged is that the weak points were in the evidence and the prompts, not in retrieval recall. The best configuration and its trade-off against latency cannot yet be stated, because no scored model run was completed; the point estimates in Section~\ref{sec:estimates} are illustrative assumptions, not findings.
 
 The single most important engineering lesson is to read what the model is actually given. Two of the defects found---a passage window that cut off the answer, and a reference answer that counted a past-semester course---looked like model errors until the inputs were inspected.
 
@@ -975,7 +976,7 @@ Q30 & What are the opening hours of the gym and swimming pool on campus? \textit
   \item Google Agent Development Kit documentation: \url{https://google.github.io/adk-docs/}
   \item LiteLLM documentation: \url{https://docs.litellm.ai/}
   \item ChromaDB documentation: \url{https://docs.trychroma.com/}
-  \item all-MiniLM-L6-v2 sentence-embedding model: \url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}
+  \item all-MiniLM-L6-v2 sentence-embedding model: \href{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}{Hugging Face model card}
   \item Groq API documentation: \url{https://console.groq.com/docs}
   \item IIT Jodhpur Office of Academic Affairs: \url{https://iitj.ac.in/office-of-academics/}
   \item Source documents: the 29 URLs recorded in \code{data1/manifest_source.csv}.

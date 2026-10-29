@@ -1,0 +1,64 @@
+{
+  "measured": false,
+  "status": "estimated (not measured)",
+  "note": "Illustrative assumed counts; not experimental results and not calibrated predictions.",
+  "models": {
+    "Qwen3.8-27B": {
+      "assumed_correct": {
+        "Rules & calendar": 8,
+        "Timetable": 8,
+        "Email": 5,
+        "Must refuse": 4,
+        "Overall": 25
+      },
+      "accuracy_pct": {
+        "Rules & calendar": 72.7,
+        "Timetable": 88.9,
+        "Email": 100.0,
+        "Must refuse": 80.0,
+        "Overall": 83.3
+      },
+      "assumed_correct_and_cited_of_30": 22,
+      "groundedness_pct": 73.3,
+      "assumed_questions_changing_between_runs": 3
+    },
+    "gpt-oss-120B": {
+      "assumed_correct": {
+        "Rules & calendar": 9,
+        "Timetable": 8,
+        "Email": 5,
+        "Must refuse": 4,
+        "Overall": 26
+      },
+      "accuracy_pct": {
+        "Rules & calendar": 81.8,
+        "Timetable": 88.9,
+        "Email": 100.0,
+        "Must refuse": 80.0,
+        "Overall": 86.7
+      },
+      "assumed_correct_and_cited_of_30": 23,
+      "groundedness_pct": 76.7,
+      "assumed_questions_changing_between_runs": 2
+    },
+    "gpt-oss-20B": {
+      "assumed_correct": {
+        "Rules & calendar": 7,
+        "Timetable": 7,
+        "Email": 4,
+        "Must refuse": 4,
+        "Overall": 22
+      },
+      "accuracy_pct": {
+        "Rules & calendar": 63.6,
+        "Timetable": 77.8,
+        "Email": 80.0,
+        "Must refuse": 80.0,
+        "Overall": 73.3
+      },
+      "assumed_correct_and_cited_of_30": 19,
+      "groundedness_pct": 63.3,
+      "assumed_questions_changing_between_runs": 5
+    }
+  }
+}
