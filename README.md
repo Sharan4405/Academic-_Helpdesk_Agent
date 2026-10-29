@@ -122,18 +122,28 @@ long as Groq asks and retries; nothing is lost.
 ## Evaluation
 
 ```powershell
-python eval/check_tools.py        # deterministic: CSV tools, drafts, log (no LLM)
-python eval/check_retrieval.py    # deterministic: retrieval recall, refusal separability
-python eval/run_eval.py --runs 3 --mode multi --tag qwen27-multi
-python eval/run_eval.py --mode single --model groq/openai/gpt-oss-20b --tag gptoss20-single
-python eval/summarise_results.py  # markdown tables for the report
+python eval/check_tools.py         # CSV tools, drafts, log: 48 assertions, no model
+python eval/check_retrieval.py     # retrieval recall and refusal separability, no model
+python eval/evidence_eval.py       # all 30 questions: is the right evidence handed to the model?
+python eval/run_eval.py --runs 3 --mode multi --tag qwen27-multi   # scores the model's answers
+python eval/make_report_assets.py  # tables and charts for the model runs
 ```
 
 The 30 questions (11 policy, 9 schedule, 5 email, 5 out of scope) are in
-`eval/questions.json` with reference answers read from the source documents; schedule and
-email answers were derived from the CSVs by code. Metrics: accuracy, groundedness
-(cites an expected source and invents none), correct and false refusal, routing, and
-run-to-run consistency. Findings are in [report/REPORT.md](report/REPORT.md).
+`eval/questions.json`, with reference answers read from the source documents and, for
+schedule and email, derived from the CSVs by code.
+
+**Measured results** (`evidence_eval.py`, no model involved): the right document or
+record is found for 24 of 25 answerable questions, the required facts reach the model for
+24 of 25 (the other is a deliberate limit case), and the evidence check gives the right
+verdict for 15 of 16 questions that have one.
+
+![Evidence handed to the model, by question category](eval/metrics/charts/evidence_by_category.png)
+
+Scoring the model's own answers (`run_eval.py`) takes hours on Groq's free tier and has
+**not been completed**, so no model accuracy figure is reported. Method, per-question
+results, defects found and limitations are in [report/REPORT.md](report/REPORT.md);
+tables and charts are in [eval/metrics/](eval/metrics/).
 
 ## Unanswered-question log
 

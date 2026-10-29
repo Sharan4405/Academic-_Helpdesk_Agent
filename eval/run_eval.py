@@ -76,6 +76,7 @@ def sources_section(answer: str) -> str:
 def _norm(text: str) -> str:
     """Lower-case and fold typographic variants (no-break spaces, special hyphens, dashes)."""
     text = unicodedata.normalize("NFKC", str(text)).lower()
+    text = text.replace("‘", "'").replace("’", "'").replace("“", '"').replace("”", '"')
     text = re.sub(r"[‐-―−]", "-", text)
     return re.sub(r"\s+", " ", text)
 

@@ -113,7 +113,7 @@ Rules, regulations and calendar: 11 · Timetable and course offerings: 9 · Emai
 
 **Q18. How many courses are scheduled in slot G this semester?**
 
-- Reference answer: Eight: CSL3050, CSL4150, AIL4010, HSL2110, HSL4020, HSL4110, HSL7460 and HSL4140.
+- Reference answer: Seven: CSL3050, CSL4150, AIL4010, HSL2110, HSL4020, HSL4110 and HSL7460. (HSL4140 is also in slot G but belongs to Semester II 2025-26, not this semester.)
 - Expected route: `schedule_agent`
 - Must cite one of: `courses.csv`, `timetable.csv`
 

@@ -18,3 +18,6 @@ ollama>=0.4.0
 
 # Corpus front-matter parsing
 PyYAML>=6.0
+
+# Charts for eval/make_report_assets.py and eval/evidence_eval.py
+matplotlib>=3.8

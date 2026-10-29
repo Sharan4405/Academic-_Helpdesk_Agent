@@ -88,7 +88,8 @@ def main() -> int:
     slot_a = get_slot_timing("A")["meetings"]
     check("slot A days", [m["day"] for m in slot_a], ["Monday", "Tuesday", "Thursday"])
     check("slot A time", {(m["start_time"], m["end_time"]) for m in slot_a}, {("09:00", "09:50")})
-    check("slot G course count", len(get_slot_timing("G")["courses_in_slot"]), 8)
+    check("slot G course count (this semester only)", len(get_slot_timing("G")["courses_in_slot"]), 7)
+    check("slot G count is given by the tool", get_slot_timing("G")["course_count"], 7)
     game = lookup_course("Computational Game Theory")["matches"][0]
     check("credits", game["credits"], 3)
     check("room", game["room"], "LHC 204")

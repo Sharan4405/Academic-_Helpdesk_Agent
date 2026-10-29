@@ -218,7 +218,7 @@ def grouped_bars(ax, groups: list[str], series: list[tuple[str, list[float]]]) -
     ax.set_ylim(0, 112)
     ax.set_yticks([0, 25, 50, 75, 100])
     ax.set_yticklabels([f"{t}%" for t in (0, 25, 50, 75, 100)])
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.0), ncol=n, frameon=False,
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.02), ncol=n, frameon=False,
               fontsize=9.5, labelcolor=INK_2, handlelength=1.2)
 
 
@@ -237,7 +237,7 @@ def chart_overall(summaries: list[dict]) -> Path:
         [lbl for _, lbl in METRICS],
         [(legend_name(s), [s[k] for k, _ in METRICS]) for s in summaries],
     )
-    fig.subplots_adjust(top=0.80, bottom=0.10, left=0.07, right=0.97)
+    fig.subplots_adjust(top=0.82, bottom=0.10, left=0.07, right=0.97)
     path = CHARTS / "overall_metrics.png"
     fig.savefig(path, facecolor=SURFACE)
     plt.close(fig)
@@ -256,7 +256,7 @@ def chart_categories(summaries: list[dict]) -> Path:
         [CATEGORY_LABELS[c] for c in cats],
         [(legend_name(s), [s["by_category"][c]["accuracy_pct"] for c in cats]) for s in summaries],
     )
-    fig.subplots_adjust(top=0.80, bottom=0.14, left=0.07, right=0.97)
+    fig.subplots_adjust(top=0.82, bottom=0.14, left=0.07, right=0.97)
     path = CHARTS / "accuracy_by_category.png"
     fig.savefig(path, facecolor=SURFACE)
     plt.close(fig)

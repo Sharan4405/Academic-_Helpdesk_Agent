@@ -1,0 +1,350 @@
+{
+  "question_set": "iitj-helpdesk-real-corpus-v1",
+  "corpus": "prebuilt",
+  "summary": {
+    "overall": {
+      "evidence_found": {
+        "pct": 96.0,
+        "n": 25
+      },
+      "facts_present": {
+        "pct": 96.0,
+        "n": 25
+      },
+      "verdict_correct": {
+        "pct": 93.8,
+        "n": 16
+      }
+    },
+    "by_category": {
+      "email": {
+        "evidence_found": {
+          "pct": 100.0,
+          "n": 5
+        },
+        "facts_present": {
+          "pct": 100.0,
+          "n": 5
+        },
+        "verdict_correct": {
+          "pct": 0.0,
+          "n": 0
+        }
+      },
+      "out_of_scope": {
+        "evidence_found": {
+          "pct": 0.0,
+          "n": 0
+        },
+        "facts_present": {
+          "pct": 0.0,
+          "n": 0
+        },
+        "verdict_correct": {
+          "pct": 80.0,
+          "n": 5
+        }
+      },
+      "policy": {
+        "evidence_found": {
+          "pct": 90.9,
+          "n": 11
+        },
+        "facts_present": {
+          "pct": 90.9,
+          "n": 11
+        },
+        "verdict_correct": {
+          "pct": 100.0,
+          "n": 11
+        }
+      },
+      "schedule": {
+        "evidence_found": {
+          "pct": 100.0,
+          "n": 9
+        },
+        "facts_present": {
+          "pct": 100.0,
+          "n": 9
+        },
+        "verdict_correct": {
+          "pct": 0.0,
+          "n": 0
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "Q01",
+      "category": "policy",
+      "question": "What is the attendance requirement to sit in the Major exam?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q02",
+      "category": "policy",
+      "question": "How many examinations are held in a semester and how long is the Major exam?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q03",
+      "category": "policy",
+      "question": "By when must I apply for a make-up exam if I miss the Major exam because of illness?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q04",
+      "category": "policy",
+      "question": "Until when can I withdraw from a course, and how does it appear on my grade card?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q05",
+      "category": "policy",
+      "question": "What is the last date to add or drop courses in Semester I of 2026-27?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q06",
+      "category": "policy",
+      "question": "When is the Minor examination in Semester I of 2026-27?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q07",
+      "category": "policy",
+      "question": "How many credits is one hour of lab per week worth, compared with one hour of lecture?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q08",
+      "category": "policy",
+      "question": "When is an undergraduate student placed on academic probation?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q09",
+      "category": "policy",
+      "question": "How can I convert my CGPA into a percentage?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q10",
+      "category": "policy",
+      "question": "What is the semester fee for a hosteller in Academic Year 2026-27?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q11",
+      "category": "policy",
+      "question": "How many Open Elective credits do I need to earn in order to get a B.Tech. degree?",
+      "evidence_found": "fail",
+      "facts_present": "partial",
+      "verdict_correct": "pass",
+      "note": "limit case: the corpus does not state this; an honest 'not specified' is correct"
+    },
+    {
+      "id": "Q12",
+      "category": "schedule",
+      "question": "What is the slot for the course Autonomous Systems?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q13",
+      "category": "schedule",
+      "question": "How many 400 level electives have been floated by the Humanities department in this semester?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q14",
+      "category": "schedule",
+      "question": "Who teaches CSL7570 and in which slot does it meet?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q15",
+      "category": "schedule",
+      "question": "How many 400 level courses has the Computer Science and Engineering department floated this semester?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q16",
+      "category": "schedule",
+      "question": "Can I register for both HSL4010 and HSL4070 in the same semester, or do their slots clash?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q17",
+      "category": "schedule",
+      "question": "What are the days and timings of slot A?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q18",
+      "category": "schedule",
+      "question": "How many courses are scheduled in slot G this semester?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q19",
+      "category": "schedule",
+      "question": "How many credits is Computational Game Theory, and which room is it in?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q20",
+      "category": "schedule",
+      "question": "How many Electrical Engineering courses are offered this semester?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q21",
+      "category": "email",
+      "question": "Write an email to the course instructor of CSL7570 that I need leave for 2 days.",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q22",
+      "category": "email",
+      "question": "I was ill and missed the CSL4100 Major exam on 20 November 2026. Draft an email to the instructor asking for a make-up exam.",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q23",
+      "category": "email",
+      "question": "My attendance in IDL4010 is 68%. Write an email to the instructor requesting attendance condonation.",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q24",
+      "category": "email",
+      "question": "Draft a sick leave email to the HSL4010 instructor for 3 August 2026 to 5 August 2026.",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q25",
+      "category": "email",
+      "question": "What is the email address of the instructor of ECL4010?",
+      "evidence_found": "pass",
+      "facts_present": "pass",
+      "verdict_correct": "na",
+      "note": ""
+    },
+    {
+      "id": "Q26",
+      "category": "out_of_scope",
+      "question": "What are the available dining options on the campus?",
+      "evidence_found": "na",
+      "facts_present": "na",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q27",
+      "category": "out_of_scope",
+      "question": "What is the best way to reach the campus from Jodhpur city center?",
+      "evidence_found": "na",
+      "facts_present": "na",
+      "verdict_correct": "partial",
+      "note": "evidence check passes; refusal relies on the orchestrator's scope rule"
+    },
+    {
+      "id": "Q28",
+      "category": "out_of_scope",
+      "question": "What is the weather in Jodhpur today?",
+      "evidence_found": "na",
+      "facts_present": "na",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q29",
+      "category": "out_of_scope",
+      "question": "What is my current attendance in CSL4100?",
+      "evidence_found": "na",
+      "facts_present": "na",
+      "verdict_correct": "pass",
+      "note": ""
+    },
+    {
+      "id": "Q30",
+      "category": "out_of_scope",
+      "question": "What are the opening hours of the gym and swimming pool on campus?",
+      "evidence_found": "na",
+      "facts_present": "na",
+      "verdict_correct": "pass",
+      "note": ""
+    }
+  ]
+}

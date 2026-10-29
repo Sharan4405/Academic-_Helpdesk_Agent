@@ -131,10 +131,11 @@ def get_slot_timing(slot_code: str) -> dict:
     return {
         "slot": code,
         "meetings": meetings,
+        "course_count": sum(1 for r in catalogue.courses() if r["slot"].upper() == code and r["is_current"] == "True"),
         "courses_in_slot": [
             {"course_code": r["course_code"], "course_title": r["course_title"]}
             for r in catalogue.courses()
-            if r["slot"].upper() == code
+            if r["slot"].upper() == code and r["is_current"] == "True"
         ],
         "source": "timetable.csv (slot system)",
     }

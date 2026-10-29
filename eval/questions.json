@@ -142,8 +142,8 @@
     {
       "id": "Q18", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
       "question": "How many courses are scheduled in slot G this semester?",
-      "reference_answer": "Eight: CSL3050, CSL4150, AIL4010, HSL2110, HSL4020, HSL4110, HSL7460 and HSL4140.",
-      "must_contain": [["8", "eight"]],
+      "reference_answer": "Seven: CSL3050, CSL4150, AIL4010, HSL2110, HSL4020, HSL4110 and HSL7460. (HSL4140 is also in slot G but belongs to Semester II 2025-26, not this semester.)",
+      "must_contain": [["7", "seven"]],
       "must_not_contain": [],
       "groundedness_doc_ids": ["courses.csv", "timetable.csv"]
     },
