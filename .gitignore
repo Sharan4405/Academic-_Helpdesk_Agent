@@ -4,8 +4,6 @@ __pycache__/
 venv/
 .chroma/
 logs/*.jsonl
-eval/results/*.json
-!eval/results/.gitkeep
 .DS_Store
 node_modules/
 data/processed/
