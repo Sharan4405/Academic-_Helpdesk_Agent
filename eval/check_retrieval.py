@@ -76,7 +76,10 @@ def main() -> int:
 
         sufficient = search_academic_documents(question["question"], "")["sufficient_evidence"]
         row = (question["id"], best, sufficient)
-        (out_scope if question["answer_type"] == "refusal" else in_scope).append(row)
+        if question["answer_type"] == "refusal":
+            out_scope.append(row)
+        elif expected:  # CSV-backed questions never touch the document index
+            in_scope.append(row)
 
         print(
             f"{question['id']:<5}{question['category']:<14}{best:>9.3f}  "

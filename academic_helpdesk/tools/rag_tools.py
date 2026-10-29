@@ -34,23 +34,17 @@ def valid_categories() -> set[str]:
 
 
 def search_academic_documents(query: str, category: str) -> dict:
-    """Search the official academic document corpus and return the most relevant passages.
+    """Search the official document corpus (rules, regulations, circulars, curricula, calendar, fees).
 
-    Use this for any question about rules, regulations, policies, curriculum,
-    credit requirements, deadlines, office orders or procedures. Always call this
-    before answering such a question; never answer from your own knowledge.
+    Call this before answering any such question.
 
     Args:
-        query: The search query. Prefer the student's own wording plus any
-            identifier that appears in it (for example "attendance 75% Major
-            examination" or "CSL7620").
-        category: Optional category filter. Pass an empty string to search the
-            whole corpus, which is almost always the right choice.
+        query: The student's wording plus any identifier in it.
+        category: Leave as an empty string.
 
     Returns:
-        A dict with "results" (each carrying doc_id, title, section, citation and
-        the passage text) and "sufficient_evidence", which is False when nothing
-        in the corpus is relevant enough to ground an answer.
+        "results" (doc_id, citation, passage) and "sufficient_evidence", False
+        when nothing in the corpus is relevant enough to answer from.
     """
     query = (query or "").strip()
     if not query:
@@ -83,19 +77,12 @@ def search_academic_documents(query: str, category: str) -> dict:
         results.append(
             {
                 "doc_id": meta.get("doc_id", ""),
-                "title": meta.get("title", ""),
-                "section": meta.get("section", ""),
-                "category": meta.get("category", ""),
-                "source_url": meta.get("source_url", ""),
-                "doc_date": meta.get("doc_date", ""),
                 "citation": citation,
-                "relevance": round(hit.score, 3),
                 "passage": _excerpt(hit.text, query, config.PASSAGE_MAX_CHARS),
             }
         )
 
-    best_distance = min((h.distance for h in hits), default=1.0)
-    sufficient = bool(results) and best_distance <= config.MAX_RELEVANT_DISTANCE
+    sufficient = bool(results) and store.is_sufficient(hits)
 
     payload: dict = {"results": results, "sufficient_evidence": sufficient}
     if not sufficient:

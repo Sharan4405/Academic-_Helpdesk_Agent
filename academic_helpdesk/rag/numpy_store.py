@@ -80,8 +80,19 @@ class NumpyCollection:
                 self.vectors = np.vstack([self.vectors, vec])
         self._save()
 
-    def get(self, include=None) -> dict:
-        return {"ids": list(self.ids), "metadatas": list(self.metadatas), "documents": list(self.documents)}
+    def get(self, ids=None, include=None) -> dict:
+        rows = range(len(self.ids))
+        if ids is not None:
+            wanted = set(ids)
+            rows = [i for i in rows if self.ids[i] in wanted]
+        out = {
+            "ids": [self.ids[i] for i in rows],
+            "metadatas": [self.metadatas[i] for i in rows],
+            "documents": [self.documents[i] for i in rows],
+        }
+        if include and "embeddings" in include:
+            out["embeddings"] = [self.vectors[i].tolist() for i in rows]
+        return out
 
     def query(self, query_embeddings, n_results, where=None, include=None) -> dict:
         if not self.ids:

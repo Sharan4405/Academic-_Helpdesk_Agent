@@ -26,6 +26,7 @@ import json
 import random
 import re
 import sys
+import unicodedata
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -34,13 +35,17 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from academic_helpdesk import config  # noqa: E402
+from academic_helpdesk.rag import store  # noqa: E402
 from academic_helpdesk.runner import HelpdeskSession, Turn  # noqa: E402
 
 QUESTIONS_PATH = Path(__file__).parent / "questions.json"
 RESULTS_DIR = Path(__file__).parent / "results"
 
-DOC_ID_RE = re.compile(r"\b(?:AR|CU|SC|OO|DIR|TPL)-\d{2}\b")
-CSV_RE = re.compile(r"\b(?:courses|instructors|slots|exam_schedule)\.csv\b")
+# Document ids in this corpus are slugs such as "reg_2019" or "amend_attendance_2024".
+SLUG_RE = re.compile(r"\b[a-z]+(?:_[a-z0-9]+)+\b")
+CSV_RE = re.compile(r"\b(?:courses|faculty|timetable)\.csv\b")
+# Snake_case words that are not document ids (tool and field names, status values).
+NOT_A_DOC = {"draft_not_sent", "course_code", "match_count", "sick_leave", "makeup_exam"}
 
 REFUSAL_MARKERS = (
     "i do not know",
@@ -58,23 +63,32 @@ REFUSAL_MARKERS = (
 
 
 def known_doc_ids() -> set[str]:
-    ids = set()
-    for path in config.DOCUMENTS_DIR.glob("*.md"):
-        match = re.search(r"^doc_id:\s*(\S+)", path.read_text(encoding="utf-8"), re.MULTILINE)
-        if match:
-            ids.add(match.group(1).strip())
-    return ids
+    """Every doc_id present in the loaded vector store."""
+    metas = store.get_collection().get(include=["metadatas"])["metadatas"]
+    return {m["doc_id"] for m in metas if m.get("doc_id")}
+
+
+def sources_section(answer: str) -> str:
+    match = re.search(r"sources?:(.*)$", answer, re.IGNORECASE | re.DOTALL)
+    return match.group(1) if match else ""
+
+
+def _norm(text: str) -> str:
+    """Lower-case and fold typographic variants (no-break spaces, special hyphens, dashes)."""
+    text = unicodedata.normalize("NFKC", str(text)).lower()
+    text = re.sub(r"[‐-―−]", "-", text)
+    return re.sub(r"\s+", " ", text)
 
 
 def _contains(text: str, requirement) -> bool:
-    low = text.lower()
+    low = _norm(text)
     if isinstance(requirement, list):
-        return any(str(option).lower() in low for option in requirement)
-    return str(requirement).lower() in low
+        return any(_norm(option) in low for option in requirement)
+    return _norm(requirement) in low
 
 
 def _is_refusal(text: str) -> bool:
-    low = text.lower()
+    low = _norm(text)
     return any(marker in low for marker in REFUSAL_MARKERS)
 
 
@@ -83,9 +97,15 @@ def score(question: dict, turn, corpus_ids: set[str]) -> dict:
     expected_sources = [s.lower() for s in question.get("groundedness_doc_ids", [])]
     wants_refusal = question["answer_type"] == "refusal"
 
-    cited_docs = set(DOC_ID_RE.findall(answer))
+    low_answer = answer.lower()
+    cited_docs = {d for d in corpus_ids if d.lower() in low_answer}
     cited_csvs = {m.lower() for m in CSV_RE.findall(answer)}
-    hallucinated = sorted(cited_docs - corpus_ids)
+    # A citation the corpus does not contain: a slug in the Sources list that is
+    # neither a document id nor a known non-document name.
+    known = {d.lower() for d in corpus_ids}
+    hallucinated = sorted(
+        {t for t in SLUG_RE.findall(sources_section(answer).lower()) if t not in known and t not in NOT_A_DOC}
+    )
 
     refused = _is_refusal(answer)
     logged = "log_unanswered_question" in turn.tool_names
@@ -98,14 +118,18 @@ def score(question: dict, turn, corpus_ids: set[str]) -> dict:
     else:
         missing = [r for r in question.get("must_contain", []) if not _contains(answer, r)]
         forbidden = [r for r in question.get("must_not_contain", []) if _contains(answer, r)]
-        accurate = bool(answer) and not missing and not forbidden and not refused
+        if question.get("refusal_acceptable") and refused:
+            # A question the corpus only partly answers: an honest refusal is correct.
+            accurate = bool(answer) and not forbidden and not turn.error
+        else:
+            accurate = bool(answer) and not missing and not forbidden and not refused
         cited_any = any(
             src in cited_csvs or src.upper() in cited_docs or src.lower() in answer.lower()
             for src in expected_sources
         )
-        grounded = accurate and cited_any and not hallucinated
+        grounded = accurate and (cited_any or (refused and bool(question.get("refusal_acceptable")))) and not hallucinated
         refusal_correct = False
-        false_refusal = refused
+        false_refusal = refused and not question.get("refusal_acceptable")
         missing_facts = missing
         forbidden_facts = forbidden
 

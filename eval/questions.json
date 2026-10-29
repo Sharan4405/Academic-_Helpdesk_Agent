@@ -1,335 +1,247 @@
 {
-  "set_name": "Academic Helpdesk evaluation set v1",
-  "semester_context": "Semester I, Academic Year 2026-27",
-  "scoring_notes": "An entry in must_contain may be a string (that substring must appear, case-insensitively) or a list (any one member must appear). groundedness_doc_ids are the doc_ids or source files a correct answer must cite.",
+  "set_name": "iitj-helpdesk-real-corpus-v1",
+  "description": "30 questions over the real IIT Jodhpur corpus (data1/chroma, 33 documents) and the structured CSVs (data1/structured). Reference answers were read from the source documents; schedule and email answers were derived from the CSVs by code. Fields: must_contain entries are AND-ed; a list entry means any one of its options; groundedness_doc_ids is any-of.",
   "questions": [
     {
-      "id": "Q01",
+      "id": "Q01", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
       "question": "What is the attendance requirement to sit in the Major exam?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "A minimum of 75% attendance in the course is required. Between 65% and 75% the shortfall may be condoned by the Dean, Academic Affairs on the Course Instructor's recommendation; below 65% is not condonable and the student is debarred and awarded an F grade.",
+      "reference_answer": "Under the July 2024 amendment, exam performance is no longer linked to attendance. A student is expected to have full attendance, but attendance must not fall below 75% in a course; below that, the instructor can recommend de-registration. Failing the 75% criterion no longer bars a student from the exam or forces a minimum C grade.",
       "must_contain": ["75"],
-      "must_not_contain": ["80%", "70% attendance"],
-      "groundedness_doc_ids": ["AR-02"]
+      "must_not_contain": ["must have 80", "debarred from the exam"],
+      "groundedness_doc_ids": ["amend_attendance_2024"]
     },
     {
-      "id": "Q02",
-      "question": "How many Open Elective credits do I need to earn in order to get a B.Tech. degree?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "12 Open Elective credits, normally four 3-credit courses, from courses outside the student's own parent department and at 300 level or above.",
+      "id": "Q02", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "How many examinations are held in a semester and how long is the Major exam?",
+      "reference_answer": "One Minor (a 2-hour written exam around mid-semester) and one Major (a 3-hour written exam at the end, covering the whole syllabus, with weightage not less than 40%).",
+      "must_contain": [["3 hours", "3-hour", "three hours", "3 hour"], ["40%", "40 %"]],
+      "must_not_contain": [],
+      "groundedness_doc_ids": ["amend_exam_2024"]
+    },
+    {
+      "id": "Q03", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "By when must I apply for a make-up exam if I miss the Major exam because of illness?",
+      "reference_answer": "Apply to the Dean (Academics) through the course instructor within ten days from the date of the missed examination, explaining the reasons. Late applications need not be entertained. Permission is given under exceptional circumstances such as hospital admission, with the required document.",
+      "must_contain": [["ten days", "10 days", "10 day", "ten day"]],
+      "must_not_contain": [],
+      "groundedness_doc_ids": ["reg_2019", "reg_pg_2022"]
+    },
+    {
+      "id": "Q04", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "Until when can I withdraw from a course, and how does it appear on my grade card?",
+      "reference_answer": "After the last date of add-drop a student may withdraw from a course; the last date for withdrawal is typically within four weeks of the start of the semester as per the academic calendar. A withdrawn course appears with the letter grade W.",
+      "must_contain": [["four weeks", "4 weeks"], ["'W'", "\"W\"", "grade W", "letter grade W", " W "]],
+      "must_not_contain": [],
+      "groundedness_doc_ids": ["reg_2019", "reg_pg_2022"]
+    },
+    {
+      "id": "Q05", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "What is the last date to add or drop courses in Semester I of 2026-27?",
+      "reference_answer": "7 August 2026 (Friday), which is also the late-registration date.",
+      "must_contain": [["7 august 2026", "07 august 2026", "august 7, 2026", "7th august", "2026-08-07", "7 aug 2026"]],
+      "must_not_contain": [],
+      "groundedness_doc_ids": ["calendar_2026_27"]
+    },
+    {
+      "id": "Q06", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "When is the Minor examination in Semester I of 2026-27?",
+      "reference_answer": "15-20 September 2026.",
+      "must_contain": [["15-20 september 2026", "15 to 20 september 2026", "15–20 september 2026", "15 - 20 september 2026", "september 15", "15 september"]],
+      "must_not_contain": [],
+      "groundedness_doc_ids": ["calendar_2026_27"]
+    },
+    {
+      "id": "Q07", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "How many credits is one hour of lab per week worth, compared with one hour of lecture?",
+      "reference_answer": "One lecture hour per week is 1 credit; one lab (or project) hour per week is 0.5 credit. Credits are total hours (contact plus beyond-contact) divided by 3.",
+      "must_contain": ["0.5"],
+      "must_not_contain": [],
+      "groundedness_doc_ids": ["reg_2019", "btech_cse_curriculum"]
+    },
+    {
+      "id": "Q08", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "When is an undergraduate student placed on academic probation?",
+      "reference_answer": "From the third semester onward, a student who fails to earn a minimum of 12 credits in a registered semester is placed on academic probation. Two consecutive semesters on probation lead to termination of registration.",
       "must_contain": ["12"],
-      "must_not_contain": ["6 Open Elective credits", "18 Open Elective"],
-      "groundedness_doc_ids": ["CU-01", "CU-04"]
-    },
-    {
-      "id": "Q03",
-      "question": "What is the total number of credits required for a B.Tech. degree?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "A minimum of 160 credits, with a CGPA of at least 5.00 and no outstanding F grade.",
-      "must_contain": ["160"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["CU-01"]
+      "groundedness_doc_ids": ["reg_2019"]
     },
     {
-      "id": "Q04",
-      "question": "My attendance in a course is 60 percent. Can it be condoned so that I can write the Major exam?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "No. Only a shortfall between 65% and 75% is condonable; attendance below 65% is not condonable under any circumstance, and the student is debarred from the Major examination and awarded an F grade.",
-      "must_contain": [["no", "not condonable", "cannot"], "65"],
+      "id": "Q09", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "How can I convert my CGPA into a percentage?",
+      "reference_answer": "The Institute awards no class or division and has no uniformly accepted formula, but notionally the CGPA may be multiplied by 10 to obtain the percentage.",
+      "must_contain": [["10", "ten"]],
+      "must_not_contain": ["9.5"],
+      "groundedness_doc_ids": ["cgpa_conversion"]
+    },
+    {
+      "id": "Q10", "category": "policy", "answer_type": "answer", "expected_route": "policy_agent",
+      "question": "What is the semester fee for a hosteller in Academic Year 2026-27?",
+      "reference_answer": "The semester fee is Rs 32,250 for a hosteller (Rs 20,000 for a day scholar), in addition to tuition fee as per Annexure-I.",
+      "must_contain": ["32,250"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["AR-02"]
+      "groundedness_doc_ids": ["fee_2026_27"]
     },
     {
-      "id": "Q05",
-      "question": "I missed my Minor exam because I was ill. By when do I have to apply for a makeup exam and what do I need to submit?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "Inform the Course Instructor within three working days of the missed examination and file Form AC-07 on AIS with a medical certificate from the Institute Medical Centre, obtaining the instructor's recommendation. The application goes to the Makeup Examination Committee. Attendance of at least 75% in the course is a precondition.",
-      "must_contain": [["three working days", "3 working days"], "AC-07"],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["AR-04"]
+      "id": "Q11", "category": "policy", "answer_type": "answer", "refusal_acceptable": true, "expected_route": "policy_agent",
+      "question": "How many Open Elective credits do I need to earn in order to get a B.Tech. degree?",
+      "reference_answer": "The B.Tech. curricula in the corpus list Programme and Open Electives together (for example 6 + 15 credits in the last two semesters of B.Tech. CSE out of 150 graded credits) and do not state a separate Open Elective total. A correct answer says so; a refusal that logs the question is also acceptable. Inventing a single number is wrong.",
+      "must_contain": [["programme/open", "programme or open", "programme and open", "combined", "together", "not separately", "not specified", "does not specify", "do not specify"]],
+      "must_not_contain": ["exactly 12 open elective", "12 credits of open elective"],
+      "groundedness_doc_ids": ["btech_cse_curriculum", "btech_cse_structure", "btech_aids_structure", "btech_ee_structure", "btech_me_structure"]
     },
+
     {
-      "id": "Q06",
-      "question": "What is the minimum passing grade in a credit course?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "DD is the minimum passing grade in a credit course. For Ph.D. coursework the minimum is higher, BC.",
-      "must_contain": ["DD"],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["AR-01"]
-    },
-    {
-      "id": "Q07",
-      "question": "What happens if an Incomplete grade is not converted in time?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "An I grade that is not converted within the Makeup examination window automatically becomes an F grade.",
-      "must_contain": [["F grade", "becomes an f", "converted to f"]],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["AR-01"]
-    },
-    {
-      "id": "Q08",
-      "question": "What is the maximum number of credits a B.Tech. student can register for in one semester?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "27 credits, with a minimum of 15. A student with CGPA below 6.00 is capped at 20 credits, and a student on academic probation at 18.",
-      "must_contain": ["27"],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["AR-06"]
-    },
-    {
-      "id": "Q09",
-      "question": "What is the last date to withdraw from a course this semester and what grade appears on the transcript?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "30 October 2026 for Semester I of 2026-27. A withdrawn course is recorded with a W grade, which is excluded from SGPA and CGPA. Core courses cannot be withdrawn.",
-      "must_contain": [["30 october", "30 oct", "2026-10-30"], "W"],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["AR-07", "SC-01"]
-    },
-    {
-      "id": "Q10",
-      "question": "How many credits can I transfer from SWAYAM or NPTEL courses, and what do they count towards?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "A maximum of 6 credits, counted only against the Open Elective requirement, with prior approval on Form AC-16. Only courses of 12 weeks or more with a proctored examination are eligible, and at least 60% is required.",
-      "must_contain": ["6", ["open elective", "Open Elective"]],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["OO-05", "CU-04"]
-    },
-    {
-      "id": "Q11",
-      "question": "I have a family wedding on the day of my Major exam. Can I get a makeup exam for that?",
-      "category": "policy",
-      "answer_type": "answer",
-      "expected_route": "policy_agent",
-      "reference_answer": "No. Travel, personal engagements and family functions are explicitly not admissible grounds for a Makeup examination; only medical grounds, bereavement, Institute duty and an unresolvable examination clash are admissible.",
-      "must_contain": [["no", "not admissible", "not a valid", "cannot"]],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["AR-04"]
-    },
-    {
-      "id": "Q12",
+      "id": "Q12", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
       "question": "What is the slot for the course Autonomous Systems?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "CSL7620 Autonomous Systems is in Slot G, which meets Tuesday and Thursday 11:00-12:30 in LH-305. Its laboratory CSP7620 is in Slot P4, Thursday 14:00-17:00.",
-      "must_contain": ["G", ["11:00", "11.00"]],
+      "reference_answer": "Autonomous Systems (IDL4010) has no slot code in the offering list; it meets Tuesday, Thursday and Friday 11:00-11:50 in LHC 106 (instructor Anoop Jain).",
+      "must_contain": ["IDL4010", "11:00"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["courses.csv", "SC-02", "CU-08"]
+      "groundedness_doc_ids": ["courses.csv"]
     },
     {
-      "id": "Q13",
+      "id": "Q13", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
       "question": "How many 400 level electives have been floated by the Humanities department in this semester?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "Four: HSL4010 Philosophy of Science and Technology, HSL4110 Ethics of Artificial Intelligence, HSL4220 Science, Technology and Society in Modern India, and HSL4330 Psychology of Learning and Decision Making. HSL4400 is also 400 level but is a Programme Core course, so it is not counted.",
-      "must_contain": [["four", "4"], "HSL4110"],
-      "must_not_contain": ["HSL4400 is an elective"],
-      "groundedness_doc_ids": ["courses.csv", "SC-04"]
+      "reference_answer": "Seven: HSL4010, HSL4020, HSL4030, HSL4070, HSL4110, HSL4120 and HSL4130.",
+      "must_contain": [["7", "seven"], "HSL4110"],
+      "must_not_contain": [],
+      "groundedness_doc_ids": ["courses.csv"]
     },
     {
-      "id": "Q14",
+      "id": "Q14", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
       "question": "Who teaches CSL7570 and in which slot does it meet?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "CSL7570 Reinforcement Learning is taught by Dr. Arvind Menon and meets in Slot F, Tuesday and Thursday 09:30-11:00, in LH-303.",
-      "must_contain": ["Menon", "F"],
+      "reference_answer": "CSL7570 Natural Language Understanding is taught by Sidharth Ranjan and meets in slot F (Monday, Tuesday and Thursday 14:00-14:50, LHC 208).",
+      "must_contain": ["Sidharth Ranjan", ["slot f", "slot: f", "(f)", " f "]],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["courses.csv", "instructors.csv"]
+      "groundedness_doc_ids": ["courses.csv", "faculty.csv", "timetable.csv"]
     },
     {
-      "id": "Q15",
-      "question": "When and where is the Major examination for CSL7620?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "20 November 2026, forenoon session 09:00-12:00, in Exam-Hall-A.",
-      "must_contain": [["20 november", "20 nov", "2026-11-20"]],
+      "id": "Q15", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
+      "question": "How many 400 level courses has the Computer Science and Engineering department floated this semester?",
+      "reference_answer": "Nine: CSL4100, CSL4180, CSP4010, CSL4110, CSL4120, CSL4130, CSL4140, CSL4150 and CSL4160.",
+      "must_contain": [["9", "nine"], "CSL4100"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["exam_schedule.csv", "SC-03"]
+      "groundedness_doc_ids": ["courses.csv"]
     },
     {
-      "id": "Q16",
-      "question": "Can I register for both CSL7620 and CSL7570 in the same semester, or do their slots clash?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "Yes, both can be registered. CSL7620 is in Slot G and CSL7570 is in Slot F, so there is no clash. Two courses in the same slot cannot be registered together.",
-      "must_contain": [["no clash", "do not clash", "can register", "yes"]],
-      "must_not_contain": [],
-      "groundedness_doc_ids": ["courses.csv", "SC-02"]
+      "id": "Q16", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
+      "question": "Can I register for both HSL4010 and HSL4070 in the same semester, or do their slots clash?",
+      "reference_answer": "They clash: both are in slot F (Monday, Tuesday and Thursday 14:00-14:50), and two courses in the same slot cannot be registered together.",
+      "must_contain": [["clash", "cannot", "can't", "not possible", "overlap"], "F"],
+      "must_not_contain": ["no clash", "do not clash", "don't clash"],
+      "groundedness_doc_ids": ["courses.csv", "timetable.csv"]
     },
     {
-      "id": "Q17",
-      "question": "What day and time does slot P4 meet?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "Slot P4 is a laboratory slot meeting on Thursday from 14:00 to 17:00.",
-      "must_contain": ["Thursday", ["14:00", "14.00", "2 pm"]],
+      "id": "Q17", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
+      "question": "What are the days and timings of slot A?",
+      "reference_answer": "Slot A meets Monday, Tuesday and Thursday, 09:00-09:50.",
+      "must_contain": ["09:00", "Monday"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["slots.csv", "SC-02"]
+      "groundedness_doc_ids": ["timetable.csv", "courses.csv"]
     },
     {
-      "id": "Q18",
-      "question": "When is the makeup Major examination scheduled this semester?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "3 December 2026, forenoon session 09:00-12:00, in Exam-Hall-A, for students whose Form AC-07 applications have been approved.",
-      "must_contain": [["3 december", "03 december", "3 dec", "2026-12-03"]],
+      "id": "Q18", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
+      "question": "How many courses are scheduled in slot G this semester?",
+      "reference_answer": "Eight: CSL3050, CSL4150, AIL4010, HSL2110, HSL4020, HSL4110, HSL7460 and HSL4140.",
+      "must_contain": [["8", "eight"]],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["exam_schedule.csv", "SC-03", "AR-04"]
+      "groundedness_doc_ids": ["courses.csv", "timetable.csv"]
     },
     {
-      "id": "Q19",
-      "question": "How many Open Elective courses has the Mathematics department floated this semester?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "One: MTL3010 Optimisation Techniques, a 300-level 3-credit course in Slot F.",
-      "must_contain": [["one", "1"], "MTL3010"],
+      "id": "Q19", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
+      "question": "How many credits is Computational Game Theory, and which room is it in?",
+      "reference_answer": "Computational Game Theory (CSL4180) is 3 credits and is held in LHC 204 (instructor Aditi Sethia).",
+      "must_contain": ["3", "LHC 204"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["courses.csv", "SC-04"]
+      "groundedness_doc_ids": ["courses.csv"]
     },
     {
-      "id": "Q20",
-      "question": "How many credits is CSL7620 and what is its L-T-P structure?",
-      "category": "schedule",
-      "answer_type": "answer",
-      "expected_route": "schedule_agent",
-      "reference_answer": "4 credits, with L-T-P 3-0-2. Its co-requisite laboratory CSP7620 carries a further 2 credits.",
-      "must_contain": ["4", "3-0-2"],
+      "id": "Q20", "category": "schedule", "answer_type": "answer", "expected_route": "schedule_agent",
+      "question": "How many Electrical Engineering courses are offered this semester?",
+      "reference_answer": "Three: EEL4010, EEL4020 and EEL7010.",
+      "must_contain": [["3", "three"], "EEL4010"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["courses.csv", "CU-08"]
+      "groundedness_doc_ids": ["courses.csv"]
     },
+
     {
-      "id": "Q21",
+      "id": "Q21", "category": "email", "answer_type": "email_draft", "expected_route": "email_agent",
       "question": "Write an email to the course instructor of CSL7570 that I need leave for 2 days.",
-      "category": "email",
-      "answer_type": "email_draft",
-      "expected_route": "email_agent",
-      "reference_answer": "A sick-leave draft addressed to Dr. Arvind Menon at arvind.menon@iitj.ac.in, subject line carrying CSL7570 and the two-day period, body following TPL-01 Template A, with placeholders for name, roll number and dates, and a note that the medical document is due within three working days of returning.",
-      "must_contain": ["arvind.menon@iitj.ac.in", "CSL7570", ["subject", "Subject"]],
+      "reference_answer": "A sick-leave draft to Sidharth Ranjan (sranjan@iitj.ac.in), subject carrying CSL7570 and 2 days, with placeholders for the student's name, roll number and dates. Marked as not sent.",
+      "must_contain": ["sranjan@iitj.ac.in", "CSL7570", ["subject", "Subject"]],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["instructors.csv", "TPL-01", "AR-05"]
+      "groundedness_doc_ids": ["faculty.csv", "courses.csv"]
     },
     {
-      "id": "Q22",
-      "question": "I missed the Minor-2 exam of CSL7620 on 14 October 2026 because I had dengue. Draft an email to the instructor requesting a makeup exam.",
-      "category": "email",
-      "answer_type": "email_draft",
-      "expected_route": "email_agent",
-      "reference_answer": "A makeup-exam draft addressed to Dr. Rohit Bhagat at rohit.bhagat@iitj.ac.in, referring to the Minor-2 examination of CSL7620 missed on 14 October 2026, stating that Form AC-07 is being filed on AIS within three working days and that attendance is above 75%.",
-      "must_contain": ["rohit.bhagat@iitj.ac.in", "AC-07", "CSL7620"],
+      "id": "Q22", "category": "email", "answer_type": "email_draft", "expected_route": "email_agent",
+      "question": "I was ill and missed the CSL4100 Major exam on 20 November 2026. Draft an email to the instructor asking for a make-up exam.",
+      "reference_answer": "A make-up examination request to Romi Banerjee (romibanerjee@iitj.ac.in) for CSL4100, citing the missed Major exam of 20 November 2026.",
+      "must_contain": ["romibanerjee@iitj.ac.in", "CSL4100", ["make-up", "makeup", "Makeup"]],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["instructors.csv", "TPL-01", "AR-04"]
+      "groundedness_doc_ids": ["faculty.csv", "courses.csv"]
     },
     {
-      "id": "Q23",
-      "question": "What is the email ID of the instructor of HSL4110?",
-      "category": "email",
-      "answer_type": "answer",
-      "expected_route": "email_agent",
-      "reference_answer": "Dr. Suchitra Pillai, suchitra.pillai@iitj.ac.in, Associate Professor, Humanities and Social Sciences, office HSS-108.",
-      "must_contain": ["suchitra.pillai@iitj.ac.in"],
+      "id": "Q23", "category": "email", "answer_type": "email_draft", "expected_route": "email_agent",
+      "question": "My attendance in IDL4010 is 68%. Write an email to the instructor requesting attendance condonation.",
+      "reference_answer": "An attendance-condonation request to Anoop Jain (anoopj@iitj.ac.in) for IDL4010 stating 68% attendance.",
+      "must_contain": ["anoopj@iitj.ac.in", "68"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["instructors.csv", "DIR-01"]
+      "groundedness_doc_ids": ["faculty.csv", "courses.csv"]
     },
     {
-      "id": "Q24",
-      "question": "My attendance in AIL3010 is 68 percent. Draft an email to the instructor asking for condonation.",
-      "category": "email",
-      "answer_type": "email_draft",
-      "expected_route": "email_agent",
-      "reference_answer": "An attendance-condonation draft addressed to Dr. Meenal Joshi at meenal.joshi@iitj.ac.in, stating the 68% attendance, requesting a recommendation on Form AC-22 for the Dean, Academic Affairs under clause AR-02.4.",
-      "must_contain": ["meenal.joshi@iitj.ac.in", "68", ["AR-02", "AC-22"]],
+      "id": "Q24", "category": "email", "answer_type": "email_draft", "expected_route": "email_agent",
+      "question": "Draft a sick leave email to the HSL4010 instructor for 3 August 2026 to 5 August 2026.",
+      "reference_answer": "A sick-leave draft to V Hari Narayanan (hari@iitj.ac.in) for HSL4010, 3 days, from 03 August 2026 to 05 August 2026.",
+      "must_contain": ["hari@iitj.ac.in", ["03 August 2026", "3 August 2026"], ["05 August 2026", "5 August 2026"]],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["instructors.csv", "TPL-01", "AR-02"]
+      "groundedness_doc_ids": ["faculty.csv", "courses.csv"]
     },
     {
-      "id": "Q25",
-      "question": "Draft a sick leave email for 3 days to the instructor of CSL3010.",
-      "category": "email",
-      "answer_type": "email_draft",
-      "expected_route": "email_agent",
-      "reference_answer": "A sick-leave draft addressed to Dr. Arvind Menon at arvind.menon@iitj.ac.in for CSL3010 Operating Systems, three days, following TPL-01 Template A.",
-      "must_contain": ["arvind.menon@iitj.ac.in", "CSL3010"],
+      "id": "Q25", "category": "email", "answer_type": "answer", "expected_route": "email_agent",
+      "question": "What is the email address of the instructor of ECL4010?",
+      "reference_answer": "S Srivatsa Srinivas, srivatsa@iitj.ac.in.",
+      "must_contain": ["srivatsa@iitj.ac.in"],
       "must_not_contain": [],
-      "groundedness_doc_ids": ["instructors.csv", "TPL-01", "AR-05"]
+      "groundedness_doc_ids": ["faculty.csv", "courses.csv"]
     },
+
     {
-      "id": "Q26",
+      "id": "Q26", "category": "out_of_scope", "answer_type": "refusal", "expected_route": "none",
       "question": "What are the available dining options on the campus?",
-      "category": "out_of_scope",
-      "answer_type": "refusal",
-      "expected_route": "none",
-      "reference_answer": "Refusal. Dining and mess facilities are not covered by the academic document corpus.",
+      "reference_answer": "Refusal. Dining and mess facilities are not covered by the academic documents.",
       "must_contain": [["do not know", "don't know", "cannot answer", "outside"]],
       "must_not_contain": [],
       "groundedness_doc_ids": []
     },
     {
-      "id": "Q27",
+      "id": "Q27", "category": "out_of_scope", "answer_type": "refusal", "expected_route": "none",
       "question": "What is the best way to reach the campus from Jodhpur city center?",
-      "category": "out_of_scope",
-      "answer_type": "refusal",
-      "expected_route": "none",
-      "reference_answer": "Refusal. Transport and travel are not covered by the academic document corpus.",
+      "reference_answer": "Refusal. Transport and travel are not covered by the academic documents.",
       "must_contain": [["do not know", "don't know", "cannot answer", "outside"]],
       "must_not_contain": [],
       "groundedness_doc_ids": []
     },
     {
-      "id": "Q28",
-      "question": "How is hostel room allotment decided for second year students?",
-      "category": "out_of_scope",
-      "answer_type": "refusal",
-      "expected_route": "none",
-      "reference_answer": "Refusal. Hostel allotment is a Student Affairs matter and is not in the academic corpus.",
+      "id": "Q28", "category": "out_of_scope", "answer_type": "refusal", "expected_route": "none",
+      "question": "What is the weather in Jodhpur today?",
+      "reference_answer": "Refusal. Weather is not covered by the academic documents.",
       "must_contain": [["do not know", "don't know", "cannot answer", "outside"]],
       "must_not_contain": [],
       "groundedness_doc_ids": []
     },
     {
-      "id": "Q29",
-      "question": "What is the average placement package for CSE graduates this year?",
-      "category": "out_of_scope",
-      "answer_type": "refusal",
-      "expected_route": "none",
-      "reference_answer": "Refusal. Placement statistics are not in the academic document corpus.",
-      "must_contain": [["do not know", "don't know", "cannot answer", "outside"]],
+      "id": "Q29", "category": "out_of_scope", "answer_type": "refusal", "expected_route": "none",
+      "question": "What is my current attendance in CSL4100?",
+      "reference_answer": "Refusal. The helpdesk has no access to any individual student's record.",
+      "must_contain": [["do not know", "don't know", "cannot answer", "outside", "no access", "cannot access"]],
       "must_not_contain": [],
       "groundedness_doc_ids": []
     },
     {
-      "id": "Q30",
-      "question": "What is my current attendance percentage in CSL7620?",
-      "category": "out_of_scope",
-      "answer_type": "refusal",
-      "expected_route": "none",
-      "reference_answer": "Refusal. This needs the student's own record on AIS, which the helpdesk cannot access. It may point the student to AIS or the Course Instructor.",
-      "must_contain": [["do not know", "don't know", "cannot", "unable", "no access"]],
+      "id": "Q30", "category": "out_of_scope", "answer_type": "refusal", "expected_route": "none",
+      "question": "What are the opening hours of the gym and swimming pool on campus?",
+      "reference_answer": "Refusal. Sports facilities are not covered by the academic documents.",
+      "must_contain": [["do not know", "don't know", "cannot answer", "outside"]],
       "must_not_contain": [],
       "groundedness_doc_ids": []
     }

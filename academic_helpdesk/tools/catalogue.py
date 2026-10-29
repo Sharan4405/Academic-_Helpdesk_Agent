@@ -136,6 +136,30 @@ def normalise_department(name: str) -> str:
     return name.strip()
 
 
+def _minutes(clock: str) -> int:
+    hours, _, minutes = clock.partition(":")
+    return int(hours) * 60 + int(minutes)
+
+
+def meeting_intervals(row: dict[str, str]) -> set[tuple[str, int, int]]:
+    """Weekly (day, start, end) intervals of a course, from its slot or explicit times.
+
+    Used to decide clashes: a course with no slot code (explicit meeting times
+    only) can still clash with a slotted one.
+    """
+    out: set[tuple[str, int, int]] = set()
+    for code in (row["slot"], row.get("lab_slot", "")):
+        for s in slots():
+            if code and s["slot_code"] == code:
+                out.add((s["day"][:3].lower(), _minutes(s["start_time"]), _minutes(s["end_time"])))
+    for meeting in row.get("meetings", "").split(";"):
+        parts = meeting.split()
+        if len(parts) == 2 and "-" in parts[1]:
+            start, _, end = parts[1].partition("-")
+            out.add((parts[0][:3].lower(), _minutes(start), _minutes(end)))
+    return out
+
+
 def course_view(row: dict[str, str]) -> dict[str, object]:
     """Flatten a course row with its instructor and meeting times resolved."""
     instructor = instructor_by_id(row["instructor_id"]) or {}

@@ -12,6 +12,8 @@ of the same minute's budget.
 from __future__ import annotations
 
 import asyncio
+import json
+import os
 import re
 import sys
 from collections.abc import Callable
@@ -19,7 +21,7 @@ from contextvars import ContextVar
 
 from google.adk.models.lite_llm import LiteLLMClient
 
-RETRY_HINT = re.compile(r"try again in (?:(\d+)m)?(\d+(?:\.\d+)?)s", re.IGNORECASE)
+RETRY_HINT = re.compile(r"try again in\s*(?:(\d+)m(?!s))?\s*(\d+(?:\.\d+)?)\s*(ms|s)", re.IGNORECASE)
 MAX_WAIT_SECONDS = 90.0
 
 # A caller (the web service) can set this to learn about waits as they start.
@@ -29,11 +31,13 @@ rate_limit_callback: ContextVar[Callable[[float], None] | None] = ContextVar(
 
 
 def _wait_hint(message: str) -> float | None:
+    """Seconds Groq asks us to wait: handles "17.1s", "1m4.2s" and "622.5ms"."""
     match = RETRY_HINT.search(message)
     if not match:
         return None
-    minutes, seconds = match.groups()
-    return float(minutes or 0) * 60 + float(seconds)
+    minutes, amount, unit = match.groups()
+    seconds = float(amount) / 1000 if unit.lower() == "ms" else float(amount)
+    return float(minutes or 0) * 60 + seconds
 
 
 class PatientLiteLLMClient(LiteLLMClient):
@@ -44,6 +48,17 @@ class PatientLiteLLMClient(LiteLLMClient):
     async def acompletion(self, model, messages, tools, **kwargs):
         import litellm
 
+        if os.environ.get("HELPDESK_LOG_TOKENS"):
+            # Rough size of this request (about 3.6 characters per token), to see
+            # where a turn's token budget goes.
+            body = len(json.dumps(messages, default=str))
+            schema = len(json.dumps(tools, default=str)) if tools else 0
+            print(
+                f"  [llm call: ~{int((body + schema) / 3.6)} tokens "
+                f"(messages {int(body / 3.6)}, tool schemas {int(schema / 3.6)})]",
+                file=sys.stderr,
+                flush=True,
+            )
         for attempt in range(1, self.attempts + 1):
             try:
                 return await super().acompletion(model, messages, tools, **kwargs)

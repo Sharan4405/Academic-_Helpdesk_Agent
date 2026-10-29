@@ -196,10 +196,23 @@ def check_slot_clash(course_code_a: str, course_code_b: str) -> dict:
     if missing:
         return {"clash": None, "note": f"Course not found in the offering list: {missing}"}
 
-    clash = row_a["slot"].upper() == row_b["slot"].upper()
+    times_a, times_b = catalogue.meeting_intervals(row_a), catalogue.meeting_intervals(row_b)
+    if not times_a or not times_b:
+        return {"clash": None, "note": "A course has no slot or meeting times on record."}
+    overlaps = sorted(
+        (day, max(s1, s2), min(e1, e2))
+        for day, s1, e1 in times_a
+        for day2, s2, e2 in times_b
+        if day == day2 and max(s1, s2) < min(e1, e2)
+    )
+    clash = bool(overlaps)
     return {
         "clash": clash,
-        "course_a": {"course_code": row_a["course_code"], "slot": row_a["slot"]},
-        "course_b": {"course_code": row_b["course_code"], "slot": row_b["slot"]},
+        "course_a": {"course_code": row_a["course_code"], "slot": row_a["slot"] or "(explicit times)"},
+        "course_b": {"course_code": row_b["course_code"], "slot": row_b["slot"] or "(explicit times)"},
+        "overlapping_day_times": [
+            f"{day.title()} {s // 60:02d}:{s % 60:02d}-{e // 60:02d}:{e % 60:02d}"
+            for day, s, e in overlaps
+        ],
         "rule": "Two courses in the same slot cannot be registered together.",
     }

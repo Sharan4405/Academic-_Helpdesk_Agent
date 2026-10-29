@@ -100,7 +100,7 @@ PROVIDER_API_KEY_ENV = {
 CHUNK_TARGET_CHARS = int(os.environ.get("CHUNK_TARGET_CHARS", "1400"))
 CHUNK_OVERLAP_CHARS = int(os.environ.get("CHUNK_OVERLAP_CHARS", "200"))
 TOP_K = int(os.environ.get("TOP_K", "5"))
-CANDIDATE_K = int(os.environ.get("CANDIDATE_K", "20"))
+CANDIDATE_K = int(os.environ.get("CANDIDATE_K", "60"))
 # Longest passage handed to the chat model. Pre-embedded chunks can run to
 # thousands of characters; the tool sends the most query-relevant window of each
 # so a request stays inside small per-minute token budgets (Groq free tier).

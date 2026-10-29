@@ -21,11 +21,7 @@ from google.adk.models.lite_llm import LiteLlm
 
 from academic_helpdesk import config, prompts
 from academic_helpdesk.llm_client import PatientLiteLLMClient
-from academic_helpdesk.tools.contact_tools import (
-    lookup_course_instructor,
-    lookup_faculty_contact,
-    lookup_office_contact,
-)
+from academic_helpdesk.tools.contact_tools import lookup_course_instructor
 from academic_helpdesk.tools.email_tools import draft_student_email
 from academic_helpdesk.tools.escalation_tools import log_unanswered_question
 from academic_helpdesk.tools.rag_tools import search_academic_documents
@@ -34,7 +30,6 @@ from academic_helpdesk.tools.schedule_tools import (
     find_courses,
     get_slot_timing,
     lookup_course,
-    lookup_exam_schedule,
 )
 
 APP_NAME = "academic_helpdesk"
@@ -88,19 +83,13 @@ def build_policy_agent(model: LiteLlm) -> LlmAgent:
         name="policy_agent",
         model=model,
         description=(
-            "Answers questions about academic rules and regulations, attendance, "
-            "examinations, grading, makeup and leave policy, registration and "
-            "add/drop procedure, curriculum, credit and degree requirements, "
-            "elective policy, academic integrity, office orders, fees and forms."
+            "Academic rules and regulations, attendance, examinations and exam "
+            "dates, the academic calendar, grading, makeup and leave policy, "
+            "registration and add/drop, curriculum, credit and degree "
+            "requirements, elective policy, circulars, fees and forms."
         ),
         instruction=prompts.POLICY_AGENT_INSTRUCTION,
-        tools=[
-            search_academic_documents,
-            lookup_course,
-            find_courses,
-            lookup_office_contact,
-            log_unanswered_question,
-        ],
+        tools=[search_academic_documents, lookup_course, log_unanswered_question],
     )
 
 
@@ -109,16 +98,15 @@ def build_schedule_agent(model: LiteLlm) -> LlmAgent:
         name="schedule_agent",
         model=model,
         description=(
-            "Answers questions about timetable slots and timings, rooms, which "
-            "courses are offered this semester, counts of courses or electives by "
-            "department and level, examination dates and venues, and slot clashes."
+            "Timetable slots and timings, rooms, which courses are offered this "
+            "semester, counts of courses or electives by department and level, "
+            "and slot clashes."
         ),
         instruction=prompts.SCHEDULE_AGENT_INSTRUCTION,
         tools=[
             lookup_course,
             find_courses,
             get_slot_timing,
-            lookup_exam_schedule,
             check_slot_clash,
             search_academic_documents,
             log_unanswered_question,
@@ -132,19 +120,11 @@ def build_email_agent(model: LiteLlm) -> LlmAgent:
         model=model,
         description=(
             "Looks up a course instructor's contact details and drafts an email "
-            "from the student to the instructor for sick leave, a makeup "
-            "examination request or an attendance condonation request. The email "
-            "is a draft for the student to review and is never sent."
+            "to the instructor for sick leave, a makeup examination or attendance "
+            "condonation. Never sent."
         ),
         instruction=prompts.EMAIL_AGENT_INSTRUCTION,
-        tools=[
-            lookup_course_instructor,
-            lookup_faculty_contact,
-            lookup_office_contact,
-            draft_student_email,
-            search_academic_documents,
-            log_unanswered_question,
-        ],
+        tools=[lookup_course_instructor, draft_student_email, log_unanswered_question],
     )
 
 
@@ -170,9 +150,9 @@ SINGLE_AGENT_INSTRUCTION = (
     "you draft emails to course instructors.\n\n"
     + prompts.CONTEXT_BLOCK
     + "\nProcedure: use `search_academic_documents` for anything about rules, "
-    "regulations, curriculum or procedure; use `lookup_course`, `find_courses`, "
-    "`get_slot_timing`, `lookup_exam_schedule` and `check_slot_clash` for slots, "
-    "offerings, counts and examination dates, and report the tool's `match_count` "
+    "regulations, curriculum, procedure or exam dates; use `lookup_course`, "
+    "`find_courses`, `get_slot_timing` and `check_slot_clash` for slots, "
+    "offerings and counts, and report the tool's `match_count` "
     "verbatim; use `lookup_course_instructor` and then `draft_student_email` when "
     "the student wants an email. Never answer a factual question without first "
     "calling a tool.\n\n"
@@ -194,11 +174,8 @@ def build_single_agent(model_name: str | None = None) -> LlmAgent:
             lookup_course,
             find_courses,
             get_slot_timing,
-            lookup_exam_schedule,
             check_slot_clash,
             lookup_course_instructor,
-            lookup_faculty_contact,
-            lookup_office_contact,
             draft_student_email,
             log_unanswered_question,
         ],

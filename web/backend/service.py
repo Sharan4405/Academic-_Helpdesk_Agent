@@ -163,7 +163,7 @@ def search(req: SearchRequest) -> dict:
         "query": query,
         "best_distance": round(best, 3),
         "threshold": config.MAX_RELEVANT_DISTANCE,
-        "sufficient_evidence": bool(hits) and best <= config.MAX_RELEVANT_DISTANCE,
+        "sufficient_evidence": store.is_sufficient(hits),
         "results": [
             {
                 "doc_id": h.metadata.get("doc_id", ""),
