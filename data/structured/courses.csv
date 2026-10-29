@@ -1,0 +1,50 @@
+course_code,course_title,department,level,credits,ltp,course_type,slot,room,instructor_id,semester,academic_year,offered_to,prerequisites
+CSL1010,Introduction to Computing,Computer Science and Engineering,100,4,3-0-2,Institute Core,A,LH-101,FAC004,Semester I,2026-27,B.Tech. Year 1 (all branches),None
+CSL2010,Data Structures and Algorithms,Computer Science and Engineering,200,4,3-1-0,Programme Core,B,LH-203,FAC002,Semester I,2026-27,B.Tech. CSE Year 2,CSL1010
+CSL2020,Computer Organisation and Architecture,Computer Science and Engineering,200,4,3-0-2,Programme Core,C,LH-204,FAC021,Semester I,2026-27,B.Tech. CSE Year 2,CSL1010
+CSL3010,Operating Systems,Computer Science and Engineering,300,4,3-0-2,Programme Core,D,LH-205,FAC001,Semester I,2026-27,B.Tech. CSE Year 3,CSL2010
+CSL3020,Computer Networks,Computer Science and Engineering,300,3,3-0-0,Programme Core,E,LH-206,FAC003,Semester I,2026-27,B.Tech. CSE Year 3,CSL2020
+CSL3030,Database Management Systems,Computer Science and Engineering,300,4,3-0-2,Programme Core,F,LH-207,FAC002,Semester I,2026-27,B.Tech. CSE Year 3,CSL2010
+CSL4010,Compiler Design,Computer Science and Engineering,400,3,3-0-0,Programme Elective,G,LH-208,FAC021,Semester I,2026-27,B.Tech. CSE Year 4,CSL2010
+CSL4020,Information Security,Computer Science and Engineering,400,3,3-0-0,Programme Elective,H,LH-209,FAC001,Semester I,2026-27,B.Tech. CSE Year 4,CSL3020
+CSL4030,Software Engineering,Computer Science and Engineering,400,3,3-0-0,Open Elective,I,LH-210,FAC004,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),CSL1010
+CSL7510,Distributed Systems,Computer Science and Engineering,700,3,3-0-0,Programme Elective,J,LH-301,FAC003,Semester I,2026-27,M.Tech. CSE / Ph.D.,CSL3020
+CSL7530,Advanced Computer Vision,Computer Science and Engineering,700,3,3-0-0,Programme Elective,K,LH-302,FAC021,Semester I,2026-27,M.Tech. CSE / M.Tech. AI / Ph.D.,None
+CSL7570,Reinforcement Learning,Computer Science and Engineering,700,3,3-0-0,Programme Elective,F,LH-303,FAC001,Semester I,2026-27,M.Tech. CSE / M.Tech. AI / Ph.D.,CSL7620 or equivalent probability background
+CSL7580,Natural Language Understanding,Computer Science and Engineering,700,3,3-0-0,Programme Elective,E,LH-304,FAC002,Semester I,2026-27,M.Tech. CSE / M.Tech. AI / Ph.D.,None
+CSL7620,Autonomous Systems,Computer Science and Engineering,700,4,3-0-2,Programme Core,G,LH-305,FAC005,Semester I,2026-27,M.Tech. AI and Data Science / M.Tech. CSE / Ph.D.,None
+CSP7620,Autonomous Systems Laboratory,Computer Science and Engineering,700,2,0-0-4,Programme Core,P4,CSE-Lab-2,FAC006,Semester I,2026-27,M.Tech. AI and Data Science,Co-requisite CSL7620
+AIL2010,Foundations of Machine Learning,Artificial Intelligence and Data Science,200,4,3-1-0,Programme Core,C,LH-110,FAC005,Semester I,2026-27,B.Tech. AI and Data Science Year 2,MTL1010
+AIL3010,Deep Learning,Artificial Intelligence and Data Science,300,4,3-0-2,Programme Core,D,LH-111,FAC006,Semester I,2026-27,B.Tech. AI and Data Science Year 3,AIL2010
+AIL4010,Generative AI and Foundation Models,Artificial Intelligence and Data Science,400,3,3-0-0,Programme Elective,H,LH-112,FAC022,Semester I,2026-27,B.Tech. Year 4 / M.Tech.,AIL3010
+AIL4020,Responsible and Explainable AI,Artificial Intelligence and Data Science,400,3,3-0-0,Open Elective,I,LH-113,FAC022,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),AIL2010
+AIL7110,Probabilistic Graphical Models,Artificial Intelligence and Data Science,700,3,3-0-0,Programme Elective,J,LH-114,FAC005,Semester I,2026-27,M.Tech. AI and Data Science / Ph.D.,None
+EEL2010,Signals and Systems,Electrical Engineering,200,4,3-1-0,Programme Core,A,EE-LH1,FAC007,Semester I,2026-27,B.Tech. EE Year 2,MTL1010
+EEL3010,Control Systems,Electrical Engineering,300,4,3-1-0,Programme Core,B,EE-LH2,FAC008,Semester I,2026-27,B.Tech. EE Year 3,EEL2010
+EEL4010,Embedded Systems Design,Electrical Engineering,400,3,3-0-0,Programme Elective,G,EE-LH3,FAC008,Semester I,2026-27,B.Tech. EE Year 4,EEL2010
+EEL4020,Introduction to Robotics,Electrical Engineering,400,3,3-0-0,Open Elective,K,EE-LH1,FAC007,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),None
+EEL7210,Power Electronics for Renewables,Electrical Engineering,700,3,3-0-0,Programme Elective,E,EE-LH2,FAC007,Semester I,2026-27,M.Tech. EE / Ph.D.,None
+MEL2010,Engineering Thermodynamics,Mechanical Engineering,200,4,3-1-0,Programme Core,C,ME-LH1,FAC009,Semester I,2026-27,B.Tech. ME Year 2,None
+MEL3010,Heat and Mass Transfer,Mechanical Engineering,300,4,3-1-0,Programme Core,D,ME-LH2,FAC010,Semester I,2026-27,B.Tech. ME Year 3,MEL2010
+MEL4010,Additive Manufacturing,Mechanical Engineering,400,3,3-0-0,Programme Elective,H,ME-LH1,FAC010,Semester I,2026-27,B.Tech. ME Year 4,None
+MEL4020,Design Thinking for Engineers,Mechanical Engineering,400,3,2-0-2,Open Elective,L,ME-Studio,FAC009,Semester I,2026-27,B.Tech. Year 2 to 4 (any branch),None
+MTL1010,Mathematics I,Mathematics,100,4,3-1-0,Institute Core,B,LH-102,FAC011,Semester I,2026-27,B.Tech. Year 1 (all branches),None
+MTL2010,Probability and Statistics,Mathematics,200,3,3-0-0,Institute Core,E,LH-103,FAC012,Semester I,2026-27,B.Tech. Year 2 (all branches),MTL1010
+MTL3010,Optimisation Techniques,Mathematics,300,3,3-0-0,Open Elective,F,LH-104,FAC011,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),MTL1010
+MTL4010,Numerical Linear Algebra,Mathematics,400,3,3-0-0,Programme Elective,I,LH-105,FAC012,Semester I,2026-27,B.Tech. Mathematics and Computing Year 4,MTL1010
+PHL1010,Physics I,Physics,100,4,3-0-2,Institute Core,D,PHY-LH1,FAC013,Semester I,2026-27,B.Tech. Year 1 (all branches),None
+PHL4010,Quantum Computing Fundamentals,Physics,400,3,3-0-0,Open Elective,J,PHY-LH2,FAC013,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),MTL1010
+CYL1010,Chemistry I,Chemistry,100,3,2-0-2,Institute Core,A,CHEM-LH1,FAC014,Semester I,2026-27,B.Tech. Year 1 (all branches),None
+CYL4010,Materials for Energy Storage,Chemistry,400,3,3-0-0,Programme Elective,K,CHEM-LH1,FAC014,Semester I,2026-27,B.Tech. Year 4 / M.Tech.,CYL1010
+BBL2010,Cell Biology and Genetics,Bioscience and Bioengineering,200,3,3-0-0,Programme Core,F,BSBE-LH1,FAC015,Semester I,2026-27,B.Tech. BSBE Year 2,None
+BBL4010,Computational Biology,Bioscience and Bioengineering,400,3,3-0-0,Open Elective,G,BSBE-LH1,FAC015,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),None
+HSL1010,Communication Skills and Technical Writing,Humanities and Social Sciences,100,2,2-0-0,Institute Core,L,HSS-LH1,FAC018,Semester I,2026-27,B.Tech. Year 1 (all branches),None
+HSL2010,Principles of Economics,Humanities and Social Sciences,200,3,3-0-0,Institute Core,B,HSS-LH2,FAC016,Semester I,2026-27,B.Tech. Year 2 (all branches),None
+HSL4010,Philosophy of Science and Technology,Humanities and Social Sciences,400,3,3-0-0,Open Elective,H,HSS-LH1,FAC016,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch) / M.Tech.,None
+HSL4110,Ethics of Artificial Intelligence,Humanities and Social Sciences,400,3,3-0-0,Programme Elective,I,HSS-LH2,FAC017,Semester I,2026-27,B.Tech. Year 4 / M.Tech. / Ph.D.,None
+HSL4220,Science Technology and Society in Modern India,Humanities and Social Sciences,400,3,3-0-0,Open Elective,J,HSS-LH1,FAC019,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),None
+HSL4330,Psychology of Learning and Decision Making,Humanities and Social Sciences,400,3,3-0-0,Programme Elective,K,HSS-LH2,FAC017,Semester I,2026-27,B.Tech. Year 4 / M.Tech.,None
+HSL4400,Research Methods in Social Sciences,Humanities and Social Sciences,400,3,3-0-0,Programme Core,F,HSS-LH2,FAC019,Semester I,2026-27,M.A. Humanities Year 1,None
+HSL5010,Sociology of Development,Humanities and Social Sciences,500,3,3-0-0,Programme Elective,E,HSS-LH1,FAC018,Semester I,2026-27,M.A. Humanities / Ph.D.,None
+CEL2010,Fluid Mechanics,Civil and Infrastructure Engineering,200,4,3-1-0,Programme Core,A,CIE-LH1,FAC020,Semester I,2026-27,B.Tech. CIE Year 2,None
+CEL4010,Sustainable Urban Infrastructure,Civil and Infrastructure Engineering,400,3,3-0-0,Open Elective,L,CIE-LH1,FAC020,Semester I,2026-27,B.Tech. Year 3 and 4 (any branch),None
